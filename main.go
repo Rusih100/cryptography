@@ -1,5 +1,7 @@
 package main
 
-func main() {
+import "cryptography/console"
 
+func main() {
+	console.Menu()
 }

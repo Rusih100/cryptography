@@ -9,46 +9,61 @@ import (
 )
 
 func EuclidAlgorithmTest() {
-	// Простые числа для теста
-	// 19636142283486986146701619
-	// 141709103505838236078001
 
-	fmt.Println("Тест алгоритма Евклида")
+	runFlag := true
 
-	scanner := bufio.NewScanner(os.Stdin)
+	for runFlag {
+		fmt.Println("Расширенный алгоритм Евклида")
 
-	fmt.Print("x = ")
-	scanner.Scan()
-	xString := scanner.Text()
+		swithFlag := true
 
-	fmt.Print("y = ")
-	scanner.Scan()
-	yString := scanner.Text()
+		scanner := bufio.NewScanner(os.Stdin)
 
-	x := new(big.Int)
-	x.SetString(xString, 10)
+		fmt.Print("x = ")
+		scanner.Scan()
+		xString := scanner.Text()
 
-	y := new(big.Int)
-	y.SetString(yString, 10)
+		fmt.Print("y = ")
+		scanner.Scan()
+		yString := scanner.Text()
 
-	m := new(big.Int)
-	a := new(big.Int)
-	b := new(big.Int)
+		x := new(big.Int)
+		x.SetString(xString, 10)
 
-	m, a, b = cryptography.EuclidAlgorithm(x, y)
+		y := new(big.Int)
+		y.SetString(yString, 10)
 
-	fmt.Println("\nResult:")
-	fmt.Println("m =", m)
-	fmt.Println("a =", a)
-	fmt.Println("b =", b)
+		m := new(big.Int)
+		a := new(big.Int)
+		b := new(big.Int)
 
-	checkM := new(big.Int).Add(
-		new(big.Int).Mul(x, a),
-		new(big.Int).Mul(y, b),
-	)
+		m, a, b = cryptography.EuclidAlgorithm(x, y)
 
-	fmt.Println("\nCheck result:")
-	fmt.Println("m = x * a + y * b =", checkM)
+		fmt.Println("\nРезультат:")
+		fmt.Println("m =", m)
+		fmt.Println("a =", a)
+		fmt.Println("b =", b)
+
+		for swithFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				swithFlag = false
+			case "b":
+				runFlag = false
+				swithFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+
+	}
 }
 
 func PowTest() {

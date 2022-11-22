@@ -13,9 +13,9 @@ func EuclidAlgorithmTest() {
 	runFlag := true
 
 	for runFlag {
-		fmt.Println("Расширенный алгоритм Евклида")
+		switchFlag := true
 
-		swithFlag := true
+		fmt.Println("Расширенный алгоритм Евклида")
 
 		scanner := bufio.NewScanner(os.Stdin)
 
@@ -44,7 +44,7 @@ func EuclidAlgorithmTest() {
 		fmt.Println("a =", a)
 		fmt.Println("b =", b)
 
-		for swithFlag {
+		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
@@ -54,85 +54,134 @@ func EuclidAlgorithmTest() {
 
 			switch command {
 			case "r":
-				swithFlag = false
+				switchFlag = false
 			case "b":
 				runFlag = false
-				swithFlag = false
+				switchFlag = false
 			default:
 				fmt.Print("Не распознал команду, повторите ввод\n\n")
 			}
 		}
-
 	}
 }
 
 func PowTest() {
-	fmt.Println("Тест алгоритма быстрого возведения в степень")
 
-	scanner := bufio.NewScanner(os.Stdin)
+	runFlag := true
 
-	fmt.Print("a = ")
-	scanner.Scan()
-	aString := scanner.Text()
+	for runFlag {
+		switchFlag := true
 
-	fmt.Print("n = ")
-	scanner.Scan()
-	bString := scanner.Text()
+		fmt.Println("Алгоритм быстрого возведения в степень")
 
-	a := new(big.Int)
-	a.SetString(aString, 10)
+		scanner := bufio.NewScanner(os.Stdin)
 
-	n := new(big.Int)
-	n.SetString(bString, 10)
+		fmt.Print("a = ")
+		scanner.Scan()
+		aString := scanner.Text()
 
-	fmt.Println(cryptography.Pow(a, n))
+		fmt.Print("n = ")
+		scanner.Scan()
+		bString := scanner.Text()
+
+		a := new(big.Int)
+		a.SetString(aString, 10)
+
+		n := new(big.Int)
+		n.SetString(bString, 10)
+
+		fmt.Println("\nРезультат:")
+		fmt.Println(cryptography.Pow(a, n))
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
 }
 
 func PowModTest() {
-	fmt.Println("Тест алгоритма быстрого возведения в степень по модулю")
 
-	scanner := bufio.NewScanner(os.Stdin)
+	runFlag := true
 
-	fmt.Print("a = ")
-	scanner.Scan()
-	aString := scanner.Text()
+	for runFlag {
+		switchFlag := true
 
-	fmt.Print("n = ")
-	scanner.Scan()
-	nString := scanner.Text()
+		fmt.Println("Алгоритм быстрого возведения в степень по модулю")
 
-	fmt.Print("mod = ")
-	scanner.Scan()
-	modString := scanner.Text()
+		scanner := bufio.NewScanner(os.Stdin)
 
-	a := new(big.Int)
-	a.SetString(aString, 10)
+		fmt.Print("a = ")
+		scanner.Scan()
+		aString := scanner.Text()
 
-	n := new(big.Int)
-	n.SetString(nString, 10)
+		fmt.Print("n = ")
+		scanner.Scan()
+		nString := scanner.Text()
 
-	mod := new(big.Int)
-	mod.SetString(modString, 10)
+		fmt.Print("mod = ")
+		scanner.Scan()
+		modString := scanner.Text()
 
-	res1 := new(big.Int)
-	res1 = cryptography.PowMod(a, n, mod)
+		a := new(big.Int)
+		a.SetString(aString, 10)
 
-	res2 := new(big.Int)
-	res2 = cryptography.Pow(a, n)
+		n := new(big.Int)
+		n.SetString(nString, 10)
 
-	fmt.Println("Cтепень по модулю:")
-	fmt.Println(res1)
+		mod := new(big.Int)
+		mod.SetString(modString, 10)
 
-	fmt.Println("Обычная степень:")
-	fmt.Println(res2)
+		res := new(big.Int)
+		res = cryptography.PowMod(a, n, mod)
+
+		fmt.Println("\nРезультат:")
+		fmt.Println(res)
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
 }
 
 func JacobiTest() {
-	// 219 и 283 -> 1
-	// 5 и 19    -> 1
-	// 13 и 39   -> 0
-	fmt.Println("Тест Символ Якоби")
-	for {
+
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Символ Якоби")
+
 		scanner := bufio.NewScanner(os.Stdin)
 
 		fmt.Print("a = ")
@@ -149,15 +198,39 @@ func JacobiTest() {
 		n := new(big.Int)
 		n.SetString(nString, 10)
 
-		fmt.Println("Результат:\n", cryptography.Jacobi(a, n))
-		fmt.Println("Результат встроенной функции:\n", big.Jacobi(a, n))
-		fmt.Println()
+		fmt.Println("\nРезультат:")
+		fmt.Println(cryptography.Jacobi(a, n))
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
 	}
 }
 
 func FermatTestTest() {
-	fmt.Println("Тест Ферма")
-	for {
+
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Тест Ферма")
+
 		scanner := bufio.NewScanner(os.Stdin)
 
 		fmt.Print("n = ")
@@ -167,19 +240,43 @@ func FermatTestTest() {
 		n := new(big.Int)
 		n.SetString(nString, 10)
 
+		fmt.Println()
 		if cryptography.FermatTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
 		}
-		fmt.Println()
-	}
 
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
 }
 
 func SolovayStrassenTestTest() {
-	fmt.Println("Тест Соловэя-Штрассена")
-	for {
+
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Тест Соловэя-Штрассена")
+
 		scanner := bufio.NewScanner(os.Stdin)
 
 		fmt.Print("n = ")
@@ -189,19 +286,43 @@ func SolovayStrassenTestTest() {
 		n := new(big.Int)
 		n.SetString(nString, 10)
 
+		fmt.Println()
 		if cryptography.SolovayStrassenTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
 		}
-		fmt.Println()
-	}
 
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
 }
 
 func MillerRabinTestTest() {
-	fmt.Println("Тест Миллера-Рабина")
-	for {
+
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Тест Миллера-Рабина")
+
 		scanner := bufio.NewScanner(os.Stdin)
 
 		fmt.Print("n = ")
@@ -211,20 +332,43 @@ func MillerRabinTestTest() {
 		n := new(big.Int)
 		n.SetString(nString, 10)
 
+		fmt.Println()
 		if cryptography.MillerRabinTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
 		}
-		fmt.Println()
-	}
 
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
 }
 
 func SimpleNumberTest() {
-	fmt.Println("Тест генерации простого числа")
 
-	for {
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Генерация k-битного простого числа")
+
 		var k, t uint
 		fmt.Print("k = ")
 		fmt.Scan(&k)
@@ -232,7 +376,31 @@ func SimpleNumberTest() {
 		fmt.Print("t = ")
 		fmt.Scan(&t)
 
-		fmt.Println()
+		// FIXME: бага с пропущенным вводом
+
+		fmt.Println("\nРезультат:")
 		fmt.Println(cryptography.SimpleNumber(k, t))
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+			scanner := bufio.NewScanner(os.Stdin)
+
+			scanner.Scan()
+			command := scanner.Text()
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+
 	}
 }

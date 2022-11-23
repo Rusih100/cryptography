@@ -1,7 +1,22 @@
 package main
 
-import "cryptography/console"
+import (
+	"fmt"
+	"math/big"
+)
 
 func main() {
-	console.Menu()
+	//console.Menu()
+
+	var res []*big.Int
+
+	res = append(res, big.NewInt(10))
+	res = append(res, big.NewInt(10))
+	res = append(res, big.NewInt(10))
+	res = append(res, big.NewInt(10))
+
+	for i := 0; i < len(res); i++ {
+		fmt.Println(res[i])
+	}
+
 }

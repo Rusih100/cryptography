@@ -38,28 +38,28 @@ func Menu() {
 
 			switch command {
 			case "1":
-				EuclidAlgorithmTest()
+				EuclidAlgorithmConsole()
 				switchFlag = false
 			case "2":
-				PowTest()
+				PowConsole()
 				switchFlag = false
 			case "3":
-				PowModTest()
+				PowModConsole()
 				switchFlag = false
 			case "4":
-				JacobiTest()
+				JacobiConsole()
 				switchFlag = false
 			case "5":
-				FermatTestTest()
+				FermatTestConsole()
 				switchFlag = false
 			case "6":
-				SolovayStrassenTestTest()
+				SolovayStrassenTestConsole()
 				switchFlag = false
 			case "7":
-				MillerRabinTestTest()
+				MillerRabinTestConsole()
 				switchFlag = false
 			case "8":
-				SimpleNumberTest()
+				SimpleNumberConsole()
 				switchFlag = false
 
 			case "e":

@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func EuclidAlgorithmTest() {
+func EuclidAlgorithmConsole() {
 
 	runFlag := true
 
@@ -65,7 +65,7 @@ func EuclidAlgorithmTest() {
 	}
 }
 
-func PowTest() {
+func PowConsole() {
 
 	runFlag := true
 
@@ -114,7 +114,7 @@ func PowTest() {
 	}
 }
 
-func PowModTest() {
+func PowModConsole() {
 
 	runFlag := true
 
@@ -173,7 +173,7 @@ func PowModTest() {
 	}
 }
 
-func JacobiTest() {
+func JacobiConsole() {
 
 	runFlag := true
 
@@ -222,7 +222,7 @@ func JacobiTest() {
 	}
 }
 
-func FermatTestTest() {
+func FermatTestConsole() {
 
 	runFlag := true
 
@@ -268,7 +268,7 @@ func FermatTestTest() {
 	}
 }
 
-func SolovayStrassenTestTest() {
+func SolovayStrassenTestConsole() {
 
 	runFlag := true
 
@@ -314,7 +314,7 @@ func SolovayStrassenTestTest() {
 	}
 }
 
-func MillerRabinTestTest() {
+func MillerRabinTestConsole() {
 
 	runFlag := true
 
@@ -360,7 +360,7 @@ func MillerRabinTestTest() {
 	}
 }
 
-func SimpleNumberTest() {
+func SimpleNumberConsole() {
 
 	runFlag := true
 

@@ -18,6 +18,7 @@ func Menu() {
 		"6. Тест Соловэя-Штрассена\n" +
 		"7. Тест Миллера-Рабина\n" +
 		"8. Генерация k-битного простого числа\n" +
+		"9. Решение сравнения первой степени\n" +
 		"\n" +
 		"e - выход из программы\n"
 
@@ -58,6 +59,9 @@ func Menu() {
 				switchFlag = false
 			case "8":
 				SimpleNumberConsole()
+				switchFlag = false
+			case "9":
+				ModuloComparisonFirstConsole()
 				switchFlag = false
 
 			case "e":

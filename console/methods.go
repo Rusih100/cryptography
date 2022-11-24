@@ -400,3 +400,72 @@ func SimpleNumberConsole() {
 
 	}
 }
+
+func ModuloComparisonFirstConsole() {
+
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Решение сравнения первой степени")
+
+		fmt.Print("a = ")
+		var aString string
+		_, _ = fmt.Scan(&aString)
+
+		fmt.Print("b = ")
+		var bString string
+		_, _ = fmt.Scan(&bString)
+
+		fmt.Print("mod = ")
+		var modString string
+		_, _ = fmt.Scan(&modString)
+
+		a := new(big.Int)
+		a.SetString(aString, 10)
+
+		b := new(big.Int)
+		b.SetString(bString, 10)
+
+		mod := new(big.Int)
+		mod.SetString(modString, 10)
+
+		resultList := cryptography.ModuloComparisonFirst(a, b, mod)
+
+		fmt.Println("\nРезультат:")
+		if resultList.Len() == 0 {
+			fmt.Print("[]")
+
+		} else {
+			fmt.Println("[")
+			for e := resultList.Front(); e != nil; e = e.Next() {
+				fmt.Println("   ", e.Value)
+			}
+			fmt.Print("]")
+		}
+
+		fmt.Println()
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
+}

@@ -9,9 +9,14 @@ import (
 func main() {
 	//console.Menu()
 
-	a := big.NewInt(12)
-	b := big.NewInt(9)
+	a := big.NewInt(17)
+	b := big.NewInt(0)
 	mod := big.NewInt(15)
 
-	fmt.Println(cryptography.ModuloComparisonFirst(a, b, mod))
+	ls := cryptography.ModuloComparisonFirst(a, b, mod)
+
+	for e := ls.Front(); e != nil; e = e.Next() {
+		fmt.Print(e.Value, " ")
+	}
+	fmt.Println()
 }

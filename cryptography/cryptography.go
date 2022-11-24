@@ -1,6 +1,7 @@
 package cryptography
 
 import (
+	"container/list"
 	"crypto/rand"
 	"math/big"
 	rnd "math/rand"
@@ -475,7 +476,7 @@ func SimpleNumber(k uint, t uint) (result *big.Int) {
 	return randNumber
 }
 
-// 9.
+// 9. - OK
 
 // InverseElement - Нахождение обратного элемента по модулю через расширенный алгоритм Евклида
 //
@@ -509,11 +510,11 @@ func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 //
 // Вход: Сравнение вида ax = b (mod): числа a, b и mod. (a > 0, mod > 0)
 //
-// Выход: Массив, содержащий все решения данного сравнение, если оно разрешимо,
-// иначе возвращается пустой массив
+// Выход: Список, содержащий все решения данного сравнение, если оно разрешимо,
+// иначе возвращается пустой список
 //
-// Примечание: Количество решений не может превышать размерности int
-func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result []*big.Int) {
+// Примечание: Количество решений не может превышать размерности int64
+func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result list.List) {
 
 	// Копируем значения, чтобы не менять значения по указателю
 	a := new(big.Int)
@@ -545,23 +546,16 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result []*b
 	// Единственное решение
 	if gcd.Cmp(big.NewInt(1)) == 0 {
 
-		result = make([]*big.Int, 1)
-
 		x := new(big.Int)
 		// Записываем в x обратный к а элемент, далее умножаем на b
 		x = InverseElement(a, mod)
 		x = x.Mod(new(big.Int).Mul(x, b), mod)
 
-		result[0] = new(big.Int).Set(x)
+		result.PushBack(new(big.Int).Set(x))
 		return result
 	}
 
-	if !gcd.IsInt64() {
-		panic("Too many solutions!")
-	}
-
 	// Множество решений
-	result = make([]*big.Int, gcd.Int64())
 
 	// Переход к новому сравнению
 	a1 := new(big.Int).Div(a, gcd)
@@ -574,7 +568,7 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result []*b
 	x = x.Mod(new(big.Int).Mul(x, b1), mod1)
 
 	for i := int64(0); i < gcd.Int64(); i++ {
-		result[i] = new(big.Int).Set(x)
+		result.PushBack(new(big.Int).Set(x))
 		x = x.Add(x, mod1)
 	}
 	return result

@@ -567,7 +567,7 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result list
 	x = InverseElement(a1, mod1)
 	x = x.Mod(new(big.Int).Mul(x, b1), mod1)
 
-	for i := int64(0); i < gcd.Int64(); i++ {
+	for i := big.NewInt(0); i.Cmp(x) == -1; i = i.Add(i, big.NewInt(1)) {
 		result.PushBack(new(big.Int).Set(x))
 		x = x.Add(x, mod1)
 	}

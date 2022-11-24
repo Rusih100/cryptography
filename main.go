@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cryptography/cryptography"
 	"fmt"
 	"math/big"
 )
@@ -8,15 +9,9 @@ import (
 func main() {
 	//console.Menu()
 
-	var res []*big.Int
+	a := big.NewInt(12)
+	b := big.NewInt(9)
+	mod := big.NewInt(15)
 
-	res = append(res, big.NewInt(10))
-	res = append(res, big.NewInt(10))
-	res = append(res, big.NewInt(10))
-	res = append(res, big.NewInt(10))
-
-	for i := 0; i < len(res); i++ {
-		fmt.Println(res[i])
-	}
-
+	fmt.Println(cryptography.ModuloComparisonFirst(a, b, mod))
 }

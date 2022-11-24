@@ -25,7 +25,7 @@ func EuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
 
 	flagSwap := false
 
-	if x.Cmp(big.NewInt(0)) <= 0 || y.Cmp(big.NewInt(0)) <= 0 {
+	if x.Sign() <= 0 || y.Sign() <= 0 {
 		panic("x and y must be positive numbers other than zero")
 	}
 
@@ -96,7 +96,7 @@ func Pow(_a *big.Int, _n *big.Int) (result *big.Int) {
 	a.Set(_a)
 	n.Set(_n)
 
-	if n.Cmp(big.NewInt(0)) == -1 {
+	if n.Sign() == -1 {
 		panic("n must be greater than or equal to zero")
 	}
 
@@ -130,10 +130,10 @@ func PowMod(_a *big.Int, _n *big.Int, _mod *big.Int) (result *big.Int) {
 	n.Set(_n)
 	mod.Set(_mod)
 
-	if n.Cmp(big.NewInt(0)) == -1 {
+	if n.Sign() == -1 {
 		panic("n must be greater than or equal to zero")
 	}
-	if mod.Cmp(big.NewInt(0)) <= 0 {
+	if mod.Sign() <= 0 {
 		panic("mod must be a positive number other than zero")
 	}
 
@@ -179,7 +179,7 @@ func Jacobi(_a *big.Int, _n *big.Int) int64 {
 		panic("n must be greater than or equal to 3")
 	}
 
-	if a.Cmp(big.NewInt(0)) == -1 || a.Cmp(n) >= 0 {
+	if a.Sign() == -1 || a.Cmp(n) >= 0 {
 		panic("a: 0 <= a < n")
 	}
 
@@ -477,11 +477,42 @@ func SimpleNumber(k uint, t uint) (result *big.Int) {
 
 // 9.
 
+// InverseElement - Нахождение обратного элемента по модулю через расширенный алгоритм Евклида
+//
+// Вход: a > 0, mod > 0
+//
+// Выход: Обратный элемент к a по модулю mod
+func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
+
+	// Копируем значения, чтобы не менять значения по указателю
+	a := new(big.Int)
+	mod := new(big.Int)
+
+	a.Set(_a)
+	mod.Set(_mod)
+
+	// Проверка входных данных
+	if a.Sign() <= 0 {
+		panic("a > 0")
+	}
+
+	if mod.Sign() <= 0 {
+		panic("mod > 0")
+	}
+
+	_, _, result = EuclidAlgorithm(mod, a)
+
+	return result
+}
+
 // ModuloComparisonFirst - Решение сравнения первой степени.
 //
-// Вход: Сравнение вида ax = b (mod): числа a, b и mod.
+// Вход: Сравнение вида ax = b (mod): числа a, b и mod. (a > 0, mod > 0)
 //
-// Выход: Массив, содержащий все решения данного сравнение, если оно разрешимо.
+// Выход: Массив, содержащий все решения данного сравнение, если оно разрешимо,
+// иначе возвращается пустой массив
+//
+// Примечание: Количество решений не может превышать размерности int
 func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result []*big.Int) {
 
 	// Копируем значения, чтобы не менять значения по указателю
@@ -494,6 +525,57 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result []*b
 	mod.Set(_mod)
 
 	// Проверка входных данных
+	if a.Sign() <= 0 {
+		panic("a > 0")
+	}
 
+	if mod.Sign() <= 0 {
+		panic("mod > 0")
+	}
+
+	// Проверяем разрешимость сравнения
+	gcd := new(big.Int)
+	gcd, _, _ = EuclidAlgorithm(a, mod)
+
+	// Если неразрешимо возвращаем пустой массив
+	if new(big.Int).Mod(b, gcd).Sign() != 0 {
+		return result
+	}
+
+	// Единственное решение
+	if gcd.Cmp(big.NewInt(1)) == 0 {
+
+		result = make([]*big.Int, 1)
+
+		x := new(big.Int)
+		// Записываем в x обратный к а элемент, далее умножаем на b
+		x = InverseElement(a, mod)
+		x = x.Mod(new(big.Int).Mul(x, b), mod)
+
+		result[0] = new(big.Int).Set(x)
+		return result
+	}
+
+	if !gcd.IsInt64() {
+		panic("Too many solutions!")
+	}
+
+	// Множество решений
+	result = make([]*big.Int, gcd.Int64())
+
+	// Переход к новому сравнению
+	a1 := new(big.Int).Div(a, gcd)
+	b1 := new(big.Int).Div(b, gcd)
+	mod1 := new(big.Int).Div(mod, gcd)
+
+	x := new(big.Int)
+	// Записываем в x обратный к а элемент, далее умножаем на b
+	x = InverseElement(a1, mod1)
+	x = x.Mod(new(big.Int).Mul(x, b1), mod1)
+
+	for i := int64(0); i < gcd.Int64(); i++ {
+		result[i] = new(big.Int).Set(x)
+		x = x.Add(x, mod1)
+	}
 	return result
 }

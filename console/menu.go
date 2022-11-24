@@ -1,9 +1,7 @@
 package console
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 )
 
 func Menu() {
@@ -28,12 +26,12 @@ func Menu() {
 
 		fmt.Print(menuString)
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		for switchFlag {
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {

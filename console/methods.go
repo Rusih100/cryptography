@@ -1,11 +1,9 @@
 package console
 
 import (
-	"bufio"
 	"cryptography/cryptography"
 	"fmt"
 	"math/big"
-	"os"
 )
 
 func EuclidAlgorithmConsole() {
@@ -17,15 +15,13 @@ func EuclidAlgorithmConsole() {
 
 		fmt.Println("Расширенный алгоритм Евклида")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("x = ")
-		scanner.Scan()
-		xString := scanner.Text()
+		var xString string
+		_, _ = fmt.Scan(&xString)
 
 		fmt.Print("y = ")
-		scanner.Scan()
-		yString := scanner.Text()
+		var yString string
+		_, _ = fmt.Scan(&yString)
 
 		x := new(big.Int)
 		x.SetString(xString, 10)
@@ -48,8 +44,10 @@ func EuclidAlgorithmConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -74,21 +72,19 @@ func PowConsole() {
 
 		fmt.Println("Алгоритм быстрого возведения в степень")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("a = ")
-		scanner.Scan()
-		aString := scanner.Text()
+		var aString string
+		_, _ = fmt.Scan(&aString)
 
 		fmt.Print("n = ")
-		scanner.Scan()
-		bString := scanner.Text()
+		var nString string
+		_, _ = fmt.Scan(&nString)
 
 		a := new(big.Int)
 		a.SetString(aString, 10)
 
 		n := new(big.Int)
-		n.SetString(bString, 10)
+		n.SetString(nString, 10)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println(cryptography.Pow(a, n))
@@ -97,8 +93,10 @@ func PowConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -123,19 +121,17 @@ func PowModConsole() {
 
 		fmt.Println("Алгоритм быстрого возведения в степень по модулю")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("a = ")
-		scanner.Scan()
-		aString := scanner.Text()
+		var aString string
+		_, _ = fmt.Scan(&aString)
 
 		fmt.Print("n = ")
-		scanner.Scan()
-		nString := scanner.Text()
+		var nString string
+		_, _ = fmt.Scan(&nString)
 
 		fmt.Print("mod = ")
-		scanner.Scan()
-		modString := scanner.Text()
+		var modString string
+		_, _ = fmt.Scan(&modString)
 
 		a := new(big.Int)
 		a.SetString(aString, 10)
@@ -156,8 +152,10 @@ func PowModConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -182,15 +180,13 @@ func JacobiConsole() {
 
 		fmt.Println("Символ Якоби")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("a = ")
-		scanner.Scan()
-		aString := scanner.Text()
+		var aString string
+		_, _ = fmt.Scan(&aString)
 
 		fmt.Print("n = ")
-		scanner.Scan()
-		nString := scanner.Text()
+		var nString string
+		_, _ = fmt.Scan(&nString)
 
 		a := new(big.Int)
 		a.SetString(aString, 10)
@@ -205,8 +201,10 @@ func JacobiConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -231,11 +229,9 @@ func FermatTestConsole() {
 
 		fmt.Println("Тест Ферма")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("n = ")
-		scanner.Scan()
-		nString := scanner.Text()
+		var nString string
+		_, _ = fmt.Scan(&nString)
 
 		n := new(big.Int)
 		n.SetString(nString, 10)
@@ -251,8 +247,10 @@ func FermatTestConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -277,11 +275,9 @@ func SolovayStrassenTestConsole() {
 
 		fmt.Println("Тест Соловэя-Штрассена")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("n = ")
-		scanner.Scan()
-		nString := scanner.Text()
+		var nString string
+		_, _ = fmt.Scan(&nString)
 
 		n := new(big.Int)
 		n.SetString(nString, 10)
@@ -297,8 +293,10 @@ func SolovayStrassenTestConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -323,11 +321,9 @@ func MillerRabinTestConsole() {
 
 		fmt.Println("Тест Миллера-Рабина")
 
-		scanner := bufio.NewScanner(os.Stdin)
-
 		fmt.Print("n = ")
-		scanner.Scan()
-		nString := scanner.Text()
+		var nString string
+		_, _ = fmt.Scan(&nString)
 
 		n := new(big.Int)
 		n.SetString(nString, 10)
@@ -343,8 +339,10 @@ func MillerRabinTestConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner.Scan()
-			command := scanner.Text()
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {
@@ -369,14 +367,12 @@ func SimpleNumberConsole() {
 
 		fmt.Println("Генерация k-битного простого числа")
 
-		var k, t uint
+		var k, t int
 		fmt.Print("k = ")
-		fmt.Scan(&k)
+		_, _ = fmt.Scan(&k)
 
 		fmt.Print("t = ")
-		fmt.Scan(&t)
-
-		// FIXME: бага с пропущенным вводом
+		_, _ = fmt.Scan(&t)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println(cryptography.SimpleNumber(k, t))
@@ -385,10 +381,10 @@ func SimpleNumberConsole() {
 			fmt.Print("\nr - повторить,\t b - назад\n")
 
 			fmt.Print("> ")
-			scanner := bufio.NewScanner(os.Stdin)
 
-			scanner.Scan()
-			command := scanner.Text()
+			var command string
+			_, _ = fmt.Scan(&command)
+
 			fmt.Println()
 
 			switch command {

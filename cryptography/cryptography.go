@@ -418,31 +418,28 @@ func MillerRabinTest(_n *big.Int) bool {
 // Вход: Разрядность k генерируемого числа.
 //
 // Выход: Случайное k-битное нечетное число.
-func RandNumber(k uint) (result *big.Int) {
+func RandNumber(k int) (result *big.Int) {
 
 	// Проверка входных данных
 	if k <= 1 {
 		panic("k > 1")
 	}
 
-	randNumber := big.NewInt(1)
+	randNumber := new(big.Int)
 
 	// Получаем k битное число из 1: 1000...001
-	randNumber = randNumber.Lsh(randNumber, k-1)
-	randNumber = randNumber.Add(randNumber, big.NewInt(1))
+	randNumber = randNumber.SetBit(randNumber, k-1, 1)
+	randNumber = randNumber.SetBit(randNumber, 0, 1)
 
 	// Случайные числа
 	rnd.Seed(time.Now().UnixNano())
-
-	shift := big.NewInt(2) // Для битового сдвига
 
 	// Побитовая догенерация случайного числа с помощью OR
 	for i := 1; i < randNumber.BitLen()-1; i++ {
 		bit := rnd.Int31n(2)
 		if bit == 1 {
-			randNumber = randNumber.Or(randNumber, shift)
+			randNumber = randNumber.SetBit(randNumber, i, uint(bit))
 		}
-		shift = shift.Lsh(shift, 1)
 	}
 	return randNumber
 }
@@ -452,7 +449,7 @@ func RandNumber(k uint) (result *big.Int) {
 // Вход: Разрядность k искомого простого числа, параметр t >= 1.
 //
 // Выход: Число, простое с вероятностью 1 - 1 / (4**t).
-func SimpleNumber(k uint, t uint) (result *big.Int) {
+func SimpleNumber(k int, t int) (result *big.Int) {
 
 	// Проверка входных данных
 	if k <= 1 {
@@ -467,7 +464,7 @@ func SimpleNumber(k uint, t uint) (result *big.Int) {
 	randNumber := new(big.Int)
 	randNumber = RandNumber(k)
 
-	for i := uint(0); i < t; i++ {
+	for i := 0; i < t; i++ {
 		if !MillerRabinTest(randNumber) {
 			randNumber = RandNumber(k)
 			i = 0

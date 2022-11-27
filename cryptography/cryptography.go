@@ -200,11 +200,12 @@ func Jacobi(_a *big.Int, _n *big.Int) int64 {
 		k := big.NewInt(0)
 		for a.Bit(0) == 0 {
 			k = k.Add(k, big.NewInt(1))
-			a = a.Div(a, big.NewInt(2))
+			a = a.Rsh(a, 1)
 		}
 
 		if k.Bit(0) == 1 &&
-			(new(big.Int).Mod(n, big.NewInt(8)).Cmp(big.NewInt(3)) == 0 || new(big.Int).Mod(n, big.NewInt(8)).Cmp(big.NewInt(5)) == 0) {
+			(new(big.Int).Mod(n, big.NewInt(8)).Cmp(big.NewInt(3)) == 0 ||
+				new(big.Int).Mod(n, big.NewInt(8)).Cmp(big.NewInt(5)) == 0) {
 			result = -result
 		}
 
@@ -372,7 +373,7 @@ func MillerRabinTest(_n *big.Int) bool {
 	s := big.NewInt(0)
 	for r.Bit(0) == 0 {
 		s = s.Add(s, big.NewInt(1))
-		r = r.Div(r, big.NewInt(2))
+		r = r.Rsh(r, 1)
 	}
 
 	// Генерируем случайное число 2 ≤ a < n - 1:
@@ -475,7 +476,7 @@ func SimpleNumber(k int, t int) (result *big.Int) {
 
 // 9. - OK
 
-// InverseElement - Нахождение обратного элемента по модулю через расширенный алгоритм Евклида
+// InverseElement - Нахождение обратного элемента по модулю через расширенный алгоритм Евклида.
 //
 // Вход: a > 0, mod > 0
 //
@@ -573,3 +574,5 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result list
 	}
 	return result
 }
+
+// 10.

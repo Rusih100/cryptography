@@ -397,7 +397,7 @@ func MillerRabinTest(_n *big.Int) bool {
 	if y.Cmp(big.NewInt(1)) != 0 && y.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
 		j := big.NewInt(1)
 
-		if new(big.Int).Sub(s, big.NewInt(1)).Cmp(j) >= 0 && y.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
+		for new(big.Int).Sub(s, big.NewInt(1)).Cmp(j) >= 0 && y.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
 			y = PowMod(y, big.NewInt(2), n)
 			if y.Cmp(big.NewInt(1)) == 0 {
 				return false

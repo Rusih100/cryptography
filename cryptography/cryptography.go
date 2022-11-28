@@ -272,7 +272,7 @@ func FermatTest(_n *big.Int) bool {
 		new(big.Int).Sub(n, big.NewInt(1)),
 		n,
 	)
-	if r.Bit(0) == 1 {
+	if r.Cmp(big.NewInt(1)) == 0 {
 		return true
 	} else {
 		return false
@@ -335,7 +335,7 @@ func SolovayStrassenTest(_n *big.Int) bool {
 
 	s := Jacobi(a, n)
 
-	if new(big.Int).Mod(new(big.Int).Sub(r, big.NewInt(s)), n).BitLen() == 0 {
+	if new(big.Int).Mod(new(big.Int).Sub(r, big.NewInt(s)), n).Sign() == 0 {
 		return true
 	} else {
 		return false

@@ -1,11 +1,21 @@
 package cryptography
 
 import (
-	"container/list"
 	"crypto/rand"
 	"math/big"
 	rnd "math/rand"
 	"time"
+)
+
+// Константы для упрощения кода
+// Не изменять в алгоритмах!
+var (
+	constNum1 = big.NewInt(1)
+	constNum2 = big.NewInt(2)
+	constNum3 = big.NewInt(3)
+	constNum4 = big.NewInt(4)
+	constNum5 = big.NewInt(5)
+	constNum8 = big.NewInt(8)
 )
 
 // 1. - OK (Сдано)
@@ -26,10 +36,12 @@ func EuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
 
 	flagSwap := false
 
+	// x <= 0 или y <= 0
 	if x.Sign() <= 0 || y.Sign() <= 0 {
 		panic("x and y must be positive numbers other than zero")
 	}
 
+	// x < y
 	if x.Cmp(y) == -1 {
 		*x, *y = *y, *x
 		flagSwap = true
@@ -97,6 +109,7 @@ func Pow(_a *big.Int, _n *big.Int) (result *big.Int) {
 	a.Set(_a)
 	n.Set(_n)
 
+	// n < 0
 	if n.Sign() == -1 {
 		panic("n must be greater than or equal to zero")
 	}
@@ -131,9 +144,12 @@ func PowMod(_a *big.Int, _n *big.Int, _mod *big.Int) (result *big.Int) {
 	n.Set(_n)
 	mod.Set(_mod)
 
-	if n.Sign() == -1 {
+	// n < 0
+	if n.Sign() < 0 {
 		panic("n must be greater than or equal to zero")
 	}
+
+	// mod <= 0
 	if mod.Sign() <= 0 {
 		panic("mod must be a positive number other than zero")
 	}
@@ -176,19 +192,27 @@ func Jacobi(_a *big.Int, _n *big.Int) int64 {
 		panic("n must be odd")
 	}
 
-	if n.Cmp(big.NewInt(3)) == -1 {
+	// n < 3
+	if n.Cmp(constNum3) < 0 {
 		panic("n must be greater than or equal to 3")
 	}
 
-	if a.Sign() == -1 || a.Cmp(n) >= 0 {
+	// a < 0 или a >= n
+	if a.Sign() < 0 || a.Cmp(n) >= 0 {
 		panic("a: 0 <= a < n")
+	}
+
+	// a == 0
+	if a.Sign() == 0 {
+		return 0
 	}
 
 	// 1. Проверка взаимной простоты
 	gcd := new(big.Int)
 	gcd, _, _ = EuclidAlgorithm(a, n)
 
-	if gcd.Cmp(big.NewInt(1)) != 0 {
+	// gcd != 1
+	if gcd.Cmp(constNum1) != 0 {
 		return 0
 	}
 
@@ -199,19 +223,22 @@ func Jacobi(_a *big.Int, _n *big.Int) int64 {
 		// 3. Избавление от четности
 		k := big.NewInt(0)
 		for a.Bit(0) == 0 {
-			k = k.Add(k, big.NewInt(1))
+			k = k.Add(k, constNum1)
 			a = a.Rsh(a, 1)
 		}
 
+		// k - нечетное и (n (mod 8) = 3 или n (mod 8) = 5)
 		if k.Bit(0) == 1 &&
-			(new(big.Int).Mod(n, big.NewInt(8)).Cmp(big.NewInt(3)) == 0 ||
-				new(big.Int).Mod(n, big.NewInt(8)).Cmp(big.NewInt(5)) == 0) {
+			(new(big.Int).Mod(n, constNum8).Cmp(constNum3) == 0 ||
+				new(big.Int).Mod(n, constNum8).Cmp(constNum5) == 0) {
 			result = -result
 		}
 
 		// 4. Квадратичный закон взамности
-		if new(big.Int).Mod(a, big.NewInt(4)).Cmp(big.NewInt(3)) == 0 &&
-			new(big.Int).Mod(n, big.NewInt(4)).Cmp(big.NewInt(3)) == 0 {
+
+		// a (mod 4) = 3 и n (mod 4) = 3
+		if new(big.Int).Mod(a, constNum4).Cmp(constNum3) == 0 &&
+			new(big.Int).Mod(n, constNum4).Cmp(constNum3) == 0 {
 			result = -result
 		}
 		c := new(big.Int)
@@ -239,15 +266,17 @@ func FermatTest(_n *big.Int) bool {
 	n := new(big.Int)
 	n.Set(_n)
 
-	if n.Bit(0) == 0 && n.Cmp(big.NewInt(2)) != 0 {
+	if n.Bit(0) == 0 && n.Cmp(constNum2) != 0 {
 		return false
 	}
 
-	if n.Cmp(big.NewInt(1)) == 1 && n.Cmp(big.NewInt(5)) == -1 {
+	// n > 0 и n < 5
+	if n.Cmp(constNum1) > 0 && n.Cmp(constNum5) < 0 {
 		return true
 	}
 
-	if n.Cmp(big.NewInt(1)) <= 0 {
+	// n <= 1
+	if n.Cmp(constNum1) <= 0 {
 		panic("n > 1")
 	}
 
@@ -255,28 +284,24 @@ func FermatTest(_n *big.Int) bool {
 	// 0 ≤ a < n - 3	| +2
 	a, err := rand.Int(
 		rand.Reader,
-		new(big.Int).Sub(n, big.NewInt(3)),
+		new(big.Int).Sub(n, constNum3),
 	)
-
 	if err != nil {
 		panic(err)
 	}
-
-	a = a.Add(a, big.NewInt(2))
-
+	a = a.Add(a, constNum2)
 	//
 
 	r := new(big.Int)
 	r = PowMod(
 		a,
-		new(big.Int).Sub(n, big.NewInt(1)),
+		new(big.Int).Sub(n, constNum1),
 		n,
 	)
-	if r.Cmp(big.NewInt(1)) == 0 {
+	if r.Cmp(constNum1) == 0 {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 // 6. - OK (Сдано)
@@ -292,15 +317,17 @@ func SolovayStrassenTest(_n *big.Int) bool {
 	n := new(big.Int)
 	n.Set(_n)
 
-	if n.Bit(0) == 0 && n.Cmp(big.NewInt(2)) != 0 {
+	if n.Bit(0) == 0 && n.Cmp(constNum2) != 0 {
 		return false
 	}
 
-	if n.Cmp(big.NewInt(1)) == 1 && n.Cmp(big.NewInt(5)) == -1 {
+	// n > 0 и n < 5
+	if n.Cmp(constNum1) > 0 && n.Cmp(constNum5) < 0 {
 		return true
 	}
 
-	if n.Cmp(big.NewInt(1)) <= 0 {
+	// n <= 1
+	if n.Cmp(constNum1) <= 0 {
 		panic("n > 1")
 	}
 
@@ -308,15 +335,12 @@ func SolovayStrassenTest(_n *big.Int) bool {
 	// 0 ≤ a < n - 3	| +2
 	a, err := rand.Int(
 		rand.Reader,
-		new(big.Int).Sub(n, big.NewInt(3)),
+		new(big.Int).Sub(n, constNum3),
 	)
-
 	if err != nil {
 		panic(err)
 	}
-
-	a = a.Add(a, big.NewInt(2))
-
+	a = a.Add(a, constNum2)
 	//
 
 	r := new(big.Int)
@@ -324,22 +348,23 @@ func SolovayStrassenTest(_n *big.Int) bool {
 	r = PowMod(
 		a,
 		new(big.Int).Div(
-			new(big.Int).Sub(n, big.NewInt(1)),
-			big.NewInt(2)),
+			new(big.Int).Sub(n, constNum1),
+			constNum2),
 		n,
 	)
 
-	if r.Cmp(big.NewInt(1)) != 0 && r.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
+	// r != 1 и r != n - 1
+	if r.Cmp(constNum1) != 0 && r.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
 		return false
 	}
 
 	s := Jacobi(a, n)
 
+	// (r - s) (mod n) == 0
 	if new(big.Int).Mod(new(big.Int).Sub(r, big.NewInt(s)), n).Sign() == 0 {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 // 7. - OK (Сдано)
@@ -355,24 +380,26 @@ func MillerRabinTest(_n *big.Int) bool {
 	n := new(big.Int)
 	n.Set(_n)
 
-	if n.Bit(0) == 0 && n.Cmp(big.NewInt(2)) != 0 {
+	if n.Bit(0) == 0 && n.Cmp(constNum2) != 0 {
 		return false
 	}
 
-	if n.Cmp(big.NewInt(1)) == 1 && n.Cmp(big.NewInt(5)) == -1 {
+	// n > 0 и n < 5
+	if n.Cmp(constNum1) > 0 && n.Cmp(constNum5) < 0 {
 		return true
 	}
 
-	if n.Cmp(big.NewInt(1)) <= 0 {
+	// n <= 1
+	if n.Cmp(constNum1) <= 0 {
 		panic("n > 1")
 	}
 
 	// n - 1
-	r := new(big.Int).Sub(n, big.NewInt(1))
+	r := new(big.Int).Sub(n, constNum1)
 
 	s := big.NewInt(0)
 	for r.Bit(0) == 0 {
-		s = s.Add(s, big.NewInt(1))
+		s = s.Add(s, constNum1)
 		r = r.Rsh(r, 1)
 	}
 
@@ -380,32 +407,33 @@ func MillerRabinTest(_n *big.Int) bool {
 	// 0 ≤ a < n - 3	| +2
 	a, err := rand.Int(
 		rand.Reader,
-		new(big.Int).Sub(n, big.NewInt(3)),
+		new(big.Int).Sub(n, constNum3),
 	)
-
 	if err != nil {
 		panic(err)
 	}
-
-	a = a.Add(a, big.NewInt(2))
-
+	a = a.Add(a, constNum2)
 	//
 
 	y := new(big.Int)
 	y = PowMod(a, r, n)
 
-	if y.Cmp(big.NewInt(1)) != 0 && y.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
+	// y != 1 и y != n - 1
+	if y.Cmp(constNum1) != 0 && y.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
 		j := big.NewInt(1)
 
-		for new(big.Int).Sub(s, big.NewInt(1)).Cmp(j) >= 0 && y.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
-			y = PowMod(y, big.NewInt(2), n)
-			if y.Cmp(big.NewInt(1)) == 0 {
+		// s - 1 >= j и y != n -1
+		for new(big.Int).Sub(s, constNum1).Cmp(j) >= 0 && y.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
+			y = PowMod(y, constNum2, n)
+			// y == 1
+			if y.Cmp(constNum1) == 0 {
 				return false
 			}
-			j = j.Add(j, big.NewInt(1))
+			j = j.Add(j, constNum1)
 		}
 
-		if y.Cmp(new(big.Int).Sub(n, big.NewInt(1))) != 0 {
+		// y != n - 1
+		if y.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
 			return false
 		}
 	}
@@ -491,10 +519,12 @@ func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 	mod.Set(_mod)
 
 	// Проверка входных данных
+	// a <= 0
 	if a.Sign() <= 0 {
 		panic("a > 0")
 	}
 
+	// mod <= 0
 	if mod.Sign() <= 0 {
 		panic("mod > 0")
 	}
@@ -512,7 +542,7 @@ func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 // иначе возвращается пустой список
 //
 // Примечание: Количество решений не может превышать размерности int64
-func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result list.List) {
+func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSolutions, x1, offset *big.Int) {
 
 	// Копируем значения, чтобы не менять значения по указателю
 	a := new(big.Int)
@@ -524,36 +554,37 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result list
 	mod.Set(_mod)
 
 	// Проверка входных данных
+	// a <= 0
 	if a.Sign() <= 0 {
 		panic("a > 0")
 	}
 
+	// mod <= 0
 	if mod.Sign() <= 0 {
 		panic("mod > 0")
 	}
-
-	a = a.Mod(a, mod)
-	b = b.Mod(b, mod)
 
 	// Проверяем разрешимость сравнения
 	gcd := new(big.Int)
 	gcd, _, _ = EuclidAlgorithm(a, mod)
 
-	// Если неразрешимо возвращаем пустой массив
+	// Если неразрешимо
+	// b (mod gcd) != 0
 	if new(big.Int).Mod(b, gcd).Sign() != 0 {
-		return result
+		return big.NewInt(0), nil, nil
 	}
 
 	// Единственное решение
-	if gcd.Cmp(big.NewInt(1)) == 0 {
+	// gcd == 1
+	if gcd.Cmp(constNum1) == 0 {
 
 		x := new(big.Int)
+
 		// Записываем в x обратный к а элемент, далее умножаем на b
 		x = InverseElement(a, mod)
 		x = x.Mod(new(big.Int).Mul(x, b), mod)
 
-		result.PushBack(new(big.Int).Set(x))
-		return result
+		return big.NewInt(1), x, nil
 	}
 
 	// Множество решений
@@ -568,11 +599,13 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (result list
 	x = InverseElement(a1, mod1)
 	x = x.Mod(new(big.Int).Mul(x, b1), mod1)
 
-	for i := big.NewInt(0); i.Cmp(gcd) == -1; i = i.Add(i, big.NewInt(1)) {
-		result.PushBack(new(big.Int).Set(x))
-		x = x.Add(x, mod1)
-	}
-	return result
+	return gcd, x, mod1
 }
 
 // 10.
+
+// ModuloComparisonSecond - Решение сравнения второй степени.
+//
+// Вход:
+//
+// Выход:

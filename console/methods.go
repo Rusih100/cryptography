@@ -431,16 +431,29 @@ func ModuloComparisonFirstConsole() {
 		mod := new(big.Int)
 		mod.SetString(modString, 10)
 
-		resultList := cryptography.ModuloComparisonFirst(a, b, mod)
+		countSolutions := new(big.Int)
+		x1 := new(big.Int)
+		offset := new(big.Int)
+
+		countSolutions, x1, offset = cryptography.ModuloComparisonFirst(a, b, mod)
 
 		fmt.Println("\nРезультат:")
-		if resultList.Len() == 0 {
+
+		if countSolutions.Sign() == 0 {
 			fmt.Print("[]")
 
-		} else {
+		} else if countSolutions.Cmp(big.NewInt(1)) == 0 {
 			fmt.Println("[")
-			for e := resultList.Front(); e != nil; e = e.Next() {
-				fmt.Println("   ", e.Value)
+			fmt.Println("  ", x1)
+			fmt.Print("]")
+
+		} else {
+			x := new(big.Int).Set(x1)
+
+			fmt.Println("[")
+			for i := big.NewInt(0); i.Cmp(countSolutions) == -1; i = i.Add(i, big.NewInt(1)) {
+				fmt.Println("  ", x)
+				x = x.Add(x, offset)
 			}
 			fmt.Print("]")
 		}

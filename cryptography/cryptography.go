@@ -99,7 +99,7 @@ func EuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
 //
 // Вход: a - основание (число), n - положительная степень (число).
 //
-// Выход: result - число a**n.
+// Выход: result - число a^n.
 func Pow(_a *big.Int, _n *big.Int) (result *big.Int) {
 
 	// Копируем значения, чтобы не менять значения по указателю
@@ -506,9 +506,9 @@ func SimpleNumber(k int, t int) (result *big.Int) {
 
 // InverseElement - Нахождение обратного элемента по модулю через расширенный алгоритм Евклида.
 //
-// Вход: a > 0, mod > 0
+// Вход: a > 0, mod > 0.
 //
-// Выход: Обратный элемент к a по модулю mod
+// Выход: Обратный элемент к a по модулю mod.
 func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 
 	// Копируем значения, чтобы не менять значения по указателю
@@ -536,12 +536,9 @@ func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 
 // ModuloComparisonFirst - Решение сравнения первой степени.
 //
-// Вход: Сравнение вида ax = b (mod): числа a, b и mod. (a > 0, mod > 0)
+// Вход: Сравнение вида ax = b (по модулю mod): числа a, b и mod. (a > 0, mod > 0).
 //
-// Выход: Список, содержащий все решения данного сравнение, если оно разрешимо,
-// иначе возвращается пустой список
-//
-// Примечание: Количество решений не может превышать размерности int64
+// Выход: Количество решений, первое решение, сдвиг для получения следущего решения.
 func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSolutions, x1, offset *big.Int) {
 
 	// Копируем значения, чтобы не менять значения по указателю
@@ -554,15 +551,20 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSoluti
 	mod.Set(_mod)
 
 	// Проверка входных данных
-	// a <= 0
-	if a.Sign() <= 0 {
-		panic("a > 0")
+	// a == 0
+	if a.Sign() == 0 {
+		panic("a != 0")
 	}
 
 	// mod <= 0
 	if mod.Sign() <= 0 {
 		panic("mod > 0")
 	}
+
+	// Переход к положительным числам
+	// a (mod) + mod
+	a = new(big.Int).Add(new(big.Int).Mod(a, mod), mod)
+	b = new(big.Int).Add(new(big.Int).Mod(b, mod), mod)
 
 	// Проверяем разрешимость сравнения
 	gcd := new(big.Int)
@@ -606,6 +608,142 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSoluti
 
 // ModuloComparisonSecond - Решение сравнения второй степени.
 //
-// Вход:
+// Вход: Сравнение вида x^2 = a (по модулю p): числа a и p. (p - простое и p > 2).
 //
-// Выход:
+// Выход: Решение сравнения второй степени.
+func ModuloComparisonSecond(_a *big.Int, _p *big.Int) (xPos, xNeg *big.Int) {
+
+	// Копируем значения, чтобы не менять значения по указателю
+	a := new(big.Int)
+	p := new(big.Int)
+
+	a.Set(_a)
+	p.Set(_p)
+
+	// Проверка входных данных
+	// p <= 2
+	if p.Cmp(constNum2) <= 0 {
+		panic("p > 2")
+	}
+
+	if !MillerRabinTest(p) {
+		panic("p is a prime number")
+	}
+
+	// Переход к положительным числам
+	a = a.Mod(a, p)
+
+	// a == 0
+	if a.Sign() == 0 {
+		panic("a is not divisible by p")
+	}
+
+	// Проверяем квадратичный вычет a
+	if Jacobi(a, p) != 1 {
+		return nil, nil
+	}
+
+	// Перебором ищем квадратичный невычет N
+	N := big.NewInt(1)
+
+	// Пока N < p; N++
+	for ; N.Cmp(p) < 0; N = N.Add(N, constNum1) {
+		if Jacobi(N, p) == -1 {
+			break
+		}
+	}
+
+	// 1. Представление p в виде p = 2^k * h + 1
+	h := new(big.Int).Sub(p, constNum1)
+
+	k := big.NewInt(0)
+	for h.Bit(0) == 0 {
+		k = k.Add(k, constNum1)
+		h = h.Rsh(h, 1)
+	}
+
+	// 2.
+	a1 := new(big.Int)
+	a1 = PowMod(
+		a,
+		new(big.Int).Div(new(big.Int).Add(h, constNum1), constNum2),
+		p,
+	)
+
+	a2 := new(big.Int)
+	a2 = InverseElement(a, p)
+
+	N1 := new(big.Int)
+	N1 = PowMod(N, h, p)
+
+	N2 := big.NewInt(1)
+
+	j := big.NewInt(0)
+
+	// 3.
+	// i = 0; i <= k - 2; i++
+	for i := big.NewInt(0); i.Cmp(new(big.Int).Sub(k, constNum2)) <= 0; i.Add(i, constNum1) {
+
+		// 3.1
+		b := new(big.Int).Mod(
+			new(big.Int).Mul(a1, N2),
+			p,
+		)
+
+		// 3.2
+		bPow2 := new(big.Int) // Квадрат b
+		bPow2 = PowMod(b, constNum2, p)
+
+		c := new(big.Int).Mod(
+			new(big.Int).Mul(a2, bPow2),
+			p,
+		)
+
+		// 3.3
+		dPower := new(big.Int)
+		dPower = Pow(
+			constNum2,
+			new(big.Int).Sub(new(big.Int).Sub(k, constNum2), i),
+		)
+
+		d := new(big.Int)
+		d = PowMod(c, dPower, p)
+
+		// d == 1
+		if d.Cmp(constNum1) == 0 {
+			j = big.NewInt(0)
+		}
+
+		// d == -1
+		if d.Cmp(big.NewInt(-1)) == 0 {
+			j = big.NewInt(1)
+		}
+
+		// 3.4
+		N1Power := new(big.Int)
+		N1Power = Pow(constNum2, i)
+		N1Power = N1Power.Mul(N1Power, j)
+
+		temp := new(big.Int)
+		temp = PowMod(N1, N1Power, p)
+
+		N2 = new(big.Int).Mod(
+			new(big.Int).Mul(N2, temp),
+			p,
+		)
+	}
+
+	xPos = new(big.Int).Mod(
+		new(big.Int).Mul(a1, N2),
+		p,
+	)
+
+	xNeg = new(big.Int).Mod(
+		new(big.Int).Mul(a1, N2),
+		p,
+	)
+
+	xNeg.Neg(xNeg)
+
+	return xPos, xNeg
+}

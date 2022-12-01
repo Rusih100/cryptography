@@ -640,3 +640,275 @@ func TestModuloComparisonFirst8(t *testing.T) {
 		t.Fatal()
 	}
 }
+
+func TestModuloComparisonFirst9(t *testing.T) {
+	a := big.NewInt(-10)
+	b := big.NewInt(1)
+	mod := big.NewInt(13)
+
+	wantCount := big.NewInt(1)
+	wantX1 := big.NewInt(9)
+
+	//
+
+	count := new(big.Int)
+	x1 := new(big.Int)
+	offset := new(big.Int)
+
+	count, x1, offset = ModuloComparisonFirst(a, b, mod)
+
+	if wantCount.Cmp(count) != 0 || wantX1.Cmp(x1) != 0 || offset != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonFirst10(t *testing.T) {
+	a := big.NewInt(-10)
+	b := big.NewInt(-12)
+	mod := big.NewInt(13)
+
+	wantCount := big.NewInt(1)
+	wantX1 := big.NewInt(9)
+
+	//
+
+	count := new(big.Int)
+	x1 := new(big.Int)
+	offset := new(big.Int)
+
+	count, x1, offset = ModuloComparisonFirst(a, b, mod)
+
+	if wantCount.Cmp(count) != 0 || wantX1.Cmp(x1) != 0 || offset != nil {
+		t.Fatal()
+	}
+}
+
+// Решение сравнения второй степени
+
+func TestModuloComparisonSecond1(t *testing.T) {
+	a := big.NewInt(1)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	res1 := new(big.Int).Mul(x1, x1)
+	res1 = res1.Sub(res1, a)
+	res1 = res1.Mod(res1, p)
+
+	res2 := new(big.Int).Mul(x2, x2)
+	res2 = res2.Sub(res2, a)
+	res2 = res2.Mod(res2, p)
+
+	if res1.Sign() != 0 || res2.Sign() != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond2(t *testing.T) {
+	a := big.NewInt(2)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	if x1 != nil || x2 != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond3(t *testing.T) {
+	a := big.NewInt(3)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	res1 := new(big.Int).Mul(x1, x1)
+	res1 = res1.Sub(res1, a)
+	res1 = res1.Mod(res1, p)
+
+	res2 := new(big.Int).Mul(x2, x2)
+	res2 = res2.Sub(res2, a)
+	res2 = res2.Mod(res2, p)
+
+	if res1.Sign() != 0 || res2.Sign() != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond4(t *testing.T) {
+	a := big.NewInt(4)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	res1 := new(big.Int).Mul(x1, x2)
+	res1 = res1.Sub(res1, a)
+	res1 = res1.Mod(res1, p)
+
+	if res1.Sign() != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond5(t *testing.T) {
+	a := big.NewInt(5)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	if x1 != nil || x2 != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond6(t *testing.T) {
+	a := big.NewInt(6)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	if x1 != nil || x2 != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond7(t *testing.T) {
+	a := big.NewInt(7)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	if x1 != nil || x2 != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond8(t *testing.T) {
+	a := big.NewInt(8)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	if x1 != nil || x2 != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond9(t *testing.T) {
+	a := big.NewInt(9)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	res1 := new(big.Int).Mul(x1, x1)
+	res1 = res1.Sub(res1, a)
+	res1 = res1.Mod(res1, p)
+
+	res2 := new(big.Int).Mul(x2, x2)
+	res2 = res2.Sub(res2, a)
+	res2 = res2.Mod(res2, p)
+
+	if res1.Sign() != 0 || res2.Sign() != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond10(t *testing.T) {
+	a := big.NewInt(10)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	res1 := new(big.Int).Mul(x1, x2)
+	res1 = res1.Sub(res1, a)
+	res1 = res1.Mod(res1, p)
+
+	if res1.Sign() != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond11(t *testing.T) {
+	a := big.NewInt(11)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	if x1 != nil || x2 != nil {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSecond12(t *testing.T) {
+	a := big.NewInt(12)
+	p := big.NewInt(13)
+
+	x1 := new(big.Int)
+	x2 := new(big.Int)
+
+	//
+
+	x1, x2 = ModuloComparisonSecond(a, p)
+
+	res1 := new(big.Int).Mul(x1, x2)
+	res1 = res1.Sub(res1, a)
+	res1 = res1.Mod(res1, p)
+
+	if res1.Sign() != 0 {
+		t.Fatal()
+	}
+}

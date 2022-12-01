@@ -1,8 +1,6 @@
 package main
 
-import (
-	"cryptography/console"
-)
+import "cryptography/console"
 
 func main() {
 	console.Menu()

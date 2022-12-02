@@ -498,3 +498,63 @@ func ModuloComparisonFirstConsole() {
 		}
 	}
 }
+
+func ModuloComparisonSecondConsole() {
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Решение сравнения второй степени")
+
+		fmt.Print("a = ")
+		var aString string
+		_, _ = fmt.Scan(&aString)
+
+		fmt.Print("p = ")
+		var pString string
+		_, _ = fmt.Scan(&pString)
+
+		a := new(big.Int)
+		a.SetString(aString, 10)
+
+		p := new(big.Int)
+		p.SetString(pString, 10)
+
+		x1 := new(big.Int)
+		x2 := new(big.Int)
+
+		x1, x2 = cryptography.ModuloComparisonSecond(a, p)
+
+		fmt.Println("\nРезультат:")
+
+		if x1 == nil && x2 == nil {
+			fmt.Println("Решений нет")
+
+		} else {
+			fmt.Println("x1 =", x1)
+			fmt.Println("x2 =", x2)
+		}
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
+}

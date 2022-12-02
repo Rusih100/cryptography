@@ -440,14 +440,30 @@ func ModuloComparisonFirstConsole() {
 		fmt.Println("\nРезультат:")
 
 		if countSolutions.Sign() == 0 {
+			fmt.Println("Решений:", countSolutions)
 			fmt.Print("[]")
 
 		} else if countSolutions.Cmp(big.NewInt(1)) == 0 {
+			fmt.Println("Решений:", countSolutions)
 			fmt.Println("[")
 			fmt.Println("  ", x1)
 			fmt.Print("]")
 
+		} else if countSolutions.Cmp(big.NewInt(15)) >= 0 {
+			fmt.Println("Решений:", countSolutions)
+			x := new(big.Int).Set(x1)
+
+			fmt.Println("[")
+			for i := big.NewInt(0); i.Cmp(big.NewInt(3)) == -1; i = i.Add(i, big.NewInt(1)) {
+				fmt.Println("  ", x)
+				x = x.Add(x, offset)
+			}
+			fmt.Println("   ...")
+			fmt.Println("   x =", x1, "+ k *", offset)
+			fmt.Print("]")
+
 		} else {
+			fmt.Println("Решений:", countSolutions)
 			x := new(big.Int).Set(x1)
 
 			fmt.Println("[")

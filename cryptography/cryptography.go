@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// 1 лабараторная работа
+
 // Константы для упрощения кода
 // Не изменять в алгоритмах!
 var (
@@ -604,7 +606,7 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSoluti
 	return gcd, x, mod1
 }
 
-// 10.
+// 10. - OK
 
 // ModuloComparisonSecond - Решение сравнения второй степени.
 //
@@ -746,4 +748,80 @@ func ModuloComparisonSecond(_a *big.Int, _p *big.Int) (xPos, xNeg *big.Int) {
 	xNeg.Neg(xNeg)
 
 	return xPos, xNeg
+}
+
+// 11. - OK
+
+// ModuloComparisonSystem - Решение системы сравнений.
+//
+// Вход: Массив коэфицентов bArray и массив модулей mArray.
+//
+// Выход: Решение системы сравнений, если все модули взаимопросты
+func ModuloComparisonSystem(bArray []*big.Int, mArray []*big.Int) (result *big.Int) {
+
+	// Длины массивов
+	bArrayLen := len(bArray)
+	mArrayLen := len(mArray)
+
+	// Проверка входных данных
+	if bArrayLen == 0 {
+		panic("bArray: An empty array was passed")
+	}
+
+	if mArrayLen == 0 {
+		panic("mArray: An empty array was passed")
+	}
+
+	if bArrayLen != mArrayLen {
+		panic("Arrays of various lengths were transmitted")
+	}
+
+	// Проверка взаимопростоты модулей
+	testGCD := new(big.Int)
+	x := new(big.Int)
+	y := new(big.Int)
+
+	for i := 0; i < mArrayLen; i++ {
+		for j := i + 1; j < mArrayLen; j++ {
+			x = mArray[i]
+			y = mArray[j]
+
+			testGCD, _, _ = EuclidAlgorithm(x, y)
+
+			if testGCD.Cmp(constNum1) != 0 {
+				return nil
+			}
+		}
+	}
+
+	// Ищем произведение модулей
+	M := big.NewInt(1)
+
+	for i := 0; i < mArrayLen; i++ {
+		x = mArray[i]
+		M = M.Mul(M, x)
+	}
+
+	// Ищем решение
+	result = big.NewInt(0)
+	Mj := new(big.Int)
+	Nj := new(big.Int)
+
+	for j := 0; j < mArrayLen; j++ {
+		bj := bArray[j]
+		mj := mArray[j]
+
+		Mj = Mj.Div(M, mj)
+		Nj = InverseElement(Mj, mj)
+
+		sub := new(big.Int).Mul(bj, Mj)
+		sub = sub.Mod(sub, M)
+		sub = sub.Mul(sub, Nj)
+		sub = sub.Mod(sub, M)
+
+		result.Add(result, sub)
+		result.Mod(result, M)
+	}
+
+	return result
 }

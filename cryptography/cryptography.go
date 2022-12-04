@@ -756,7 +756,7 @@ func ModuloComparisonSecond(_a *big.Int, _p *big.Int) (xPos, xNeg *big.Int) {
 //
 // Вход: Массив коэфицентов bArray и массив модулей mArray.
 //
-// Выход: Решение системы сравнений, если все модули взаимопросты
+// Выход: Решение системы сравнений, если все модули взаимопросты.
 func ModuloComparisonSystem(bArray []*big.Int, mArray []*big.Int) (result *big.Int) {
 
 	// Длины массивов

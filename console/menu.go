@@ -20,6 +20,7 @@ func Menu() {
 		" 8. Генерация k-битного простого числа\n" +
 		" 9. Решение сравнения первой степени\n" +
 		"10. Решение сравнения второй степени\n" +
+		"11. Решение системы сравнений\n" +
 		"\n" +
 		"e - выход из программы\n"
 
@@ -66,6 +67,9 @@ func Menu() {
 				switchFlag = false
 			case "10":
 				ModuloComparisonSecondConsole()
+				switchFlag = false
+			case "11":
+				ModuloComparisonSystemConsole()
 				switchFlag = false
 
 			case "e":

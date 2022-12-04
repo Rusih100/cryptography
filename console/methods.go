@@ -558,3 +558,78 @@ func ModuloComparisonSecondConsole() {
 		}
 	}
 }
+
+func ModuloComparisonSystemConsole() {
+	runFlag := true
+
+	for runFlag {
+		switchFlag := true
+
+		fmt.Println("Решение системы сравнений")
+
+		fmt.Print("Размер системы: \nn = ")
+		var n int
+		_, _ = fmt.Scan(&n)
+
+		var bArray []*big.Int
+		var mArray []*big.Int
+
+		var tempString string
+		temp := new(big.Int)
+
+		x := new(big.Int)
+
+		fmt.Print("Массив коэфицентов b:\n")
+		fmt.Print("[\n")
+		for i := 0; i < n; i++ {
+			fmt.Print("  ")
+			_, _ = fmt.Scan(&tempString)
+			temp.SetString(tempString, 10)
+
+			bArray = append(bArray, new(big.Int).Set(temp))
+		}
+		fmt.Print("]\n")
+
+		fmt.Print("Массив модулей n:\n")
+		fmt.Print("[\n")
+		for i := 0; i < n; i++ {
+			fmt.Print("  ")
+			_, _ = fmt.Scan(&tempString)
+			temp.SetString(tempString, 10)
+
+			mArray = append(mArray, new(big.Int).Set(temp))
+		}
+		fmt.Print("]\n")
+
+		x = cryptography.ModuloComparisonSystem(bArray, mArray)
+
+		fmt.Println("\nРезультат:")
+
+		if x == nil {
+			fmt.Println("Решений нет")
+		} else {
+			fmt.Println(x)
+		}
+
+		for switchFlag {
+			fmt.Print("\nr - повторить,\t b - назад\n")
+
+			fmt.Print("> ")
+
+			var command string
+			_, _ = fmt.Scan(&command)
+
+			fmt.Println()
+
+			switch command {
+			case "r":
+				switchFlag = false
+			case "b":
+				runFlag = false
+				switchFlag = false
+			default:
+				fmt.Print("Не распознал команду, повторите ввод\n\n")
+			}
+		}
+	}
+}

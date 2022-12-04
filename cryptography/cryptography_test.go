@@ -912,3 +912,78 @@ func TestModuloComparisonSecond12(t *testing.T) {
 		t.Fatal()
 	}
 }
+
+func TestModuloComparisonSystem1(t *testing.T) {
+	bArray := []*big.Int{
+		big.NewInt(56),
+		big.NewInt(23),
+		big.NewInt(4),
+		big.NewInt(35),
+	}
+
+	mArray := []*big.Int{
+		big.NewInt(113),
+		big.NewInt(51),
+		big.NewInt(19),
+		big.NewInt(43),
+	}
+
+	want := big.NewInt(841115)
+
+	//
+
+	res := new(big.Int)
+	res = ModuloComparisonSystem(bArray, mArray)
+
+	if res.Cmp(want) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSystem2(t *testing.T) {
+	bArray := []*big.Int{
+		big.NewInt(3),
+		big.NewInt(5),
+		big.NewInt(7),
+	}
+
+	mArray := []*big.Int{
+		big.NewInt(3),
+		big.NewInt(5),
+		big.NewInt(7),
+	}
+
+	want := big.NewInt(0)
+
+	//
+
+	res := new(big.Int)
+	res = ModuloComparisonSystem(bArray, mArray)
+
+	if res.Cmp(want) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestModuloComparisonSystem3(t *testing.T) {
+	bArray := []*big.Int{
+		big.NewInt(1),
+		big.NewInt(2),
+		big.NewInt(3),
+	}
+
+	mArray := []*big.Int{
+		big.NewInt(3),
+		big.NewInt(6),
+		big.NewInt(9),
+	}
+
+	//
+
+	res := new(big.Int)
+	res = ModuloComparisonSystem(bArray, mArray)
+
+	if res != nil {
+		t.Fatal()
+	}
+}

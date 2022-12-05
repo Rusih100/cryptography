@@ -24,9 +24,9 @@ func (c *Polynomial) Set(coefficients []*big.Int) *Polynomial {
 
 	lenCoefficients := len(coefficients)
 
-	// Проверка входных данных
 	if lenCoefficients == 0 {
-		panic("An empty array was passed")
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+		return c
 	}
 
 	for i := 0; i < lenCoefficients; i++ {
@@ -40,11 +40,73 @@ func (c *Polynomial) Set(coefficients []*big.Int) *Polynomial {
 	return c
 }
 
+// Add - Складывает два многочлена a и b, и записывает в c
+func (c *Polynomial) Add(a, b *Polynomial) *Polynomial {
+
+	aLen := len(a.coefficients)
+	bLen := len(b.coefficients)
+	maxLen := 0
+
+	if aLen > bLen {
+		maxLen = aLen
+	} else {
+		maxLen = bLen
+	}
+
+	for i := 0; i < maxLen; i++ {
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+	}
+
+	for i := 0; i < aLen; i++ {
+		c.coefficients[i].Add(c.coefficients[i], a.coefficients[i])
+	}
+
+	for i := 0; i < bLen; i++ {
+		c.coefficients[i].Add(c.coefficients[i], b.coefficients[i])
+	}
+
+	return c
+}
+
+// Sub - вычитает из многочлена a многочлен b, и записывает в c
+func (c *Polynomial) Sub(a, b *Polynomial) *Polynomial {
+
+	aLen := len(a.coefficients)
+	bLen := len(b.coefficients)
+	maxLen := 0
+
+	if aLen > bLen {
+		maxLen = aLen
+	} else {
+		maxLen = bLen
+	}
+
+	for i := 0; i < maxLen; i++ {
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+	}
+
+	for i := 0; i < aLen; i++ {
+		c.coefficients[i].Add(c.coefficients[i], a.coefficients[i])
+	}
+
+	for i := 0; i < bLen; i++ {
+		c.coefficients[i].Sub(c.coefficients[i], b.coefficients[i])
+	}
+
+	return c
+}
+
+// TODO: Переписать с учетом минуса и знаков
+
 // Представление полинома в виде строки
 func (c *Polynomial) String() string {
 
 	lenCoefficients := len(c.coefficients)
 	result := ""
+
+	if lenCoefficients == 1 && c.coefficients[0].Sign() == 0 {
+		return c.coefficients[0].String()
+	}
 
 	for i := lenCoefficients - 1; i >= 0; i-- {
 
@@ -58,7 +120,7 @@ func (c *Polynomial) String() string {
 				result = result + "x^" + strconv.Itoa(i)
 			}
 
-			if i != 0 {
+			if i != 0 && c.coefficients[i].Cmp(constNum1) != 0 {
 				result = result + " + "
 			}
 
@@ -72,7 +134,7 @@ func (c *Polynomial) String() string {
 				result = result + c.coefficients[i].String() + "x^" + strconv.Itoa(i)
 			}
 
-			if i != 0 {
+			if i != 0 && c.coefficients[i].Cmp(constNum1) != 0 {
 				result = result + " + "
 			}
 

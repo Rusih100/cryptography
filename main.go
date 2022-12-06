@@ -10,10 +10,9 @@ func main() {
 	//console.Menu()
 
 	arr1 := []*big.Int{
-		big.NewInt(0),
-		big.NewInt(0),
-		big.NewInt(2),
-		big.NewInt(-1),
+		big.NewInt(1),
+		big.NewInt(1),
+		big.NewInt(1),
 	}
 
 	x1 := new(polynomial.Polynomial).Set(arr1)

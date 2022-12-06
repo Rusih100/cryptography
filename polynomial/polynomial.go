@@ -1,6 +1,7 @@
 package polynomial
 
 import (
+	"cryptography/cryptography"
 	"math/big"
 	"strconv"
 )
@@ -265,6 +266,27 @@ func (c *Polynomial) String() string {
 
 		}
 
+	}
+
+	return result
+}
+
+// Value - Вычисляет значение многочлена при конкретном x
+func (c *Polynomial) Value(_x *big.Int) *big.Int {
+
+	// Копируем значения, чтобы не менять значения по указателю
+	x := new(big.Int)
+	x.Set(_x)
+
+	result := big.NewInt(0)
+	temp := new(big.Int)
+
+	cLen := len(c.coefficients)
+
+	for i := 0; i < cLen; i++ {
+		temp = cryptography.Pow(x, big.NewInt(int64(i)))
+		temp = temp.Mul(temp, c.coefficients[i])
+		result = result.Add(result, temp)
 	}
 
 	return result

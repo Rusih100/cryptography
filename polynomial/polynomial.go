@@ -43,6 +43,8 @@ func (c *Polynomial) Set(coefficients []*big.Int) *Polynomial {
 // Add - Складывает два многочлена a и b, и записывает в c
 func (c *Polynomial) Add(a, b *Polynomial) *Polynomial {
 
+	c.coefficients = []*big.Int{}
+
 	aLen := len(a.coefficients)
 	bLen := len(b.coefficients)
 	maxLen := 0
@@ -71,6 +73,8 @@ func (c *Polynomial) Add(a, b *Polynomial) *Polynomial {
 // Sub - вычитает из многочлена a многочлен b, и записывает в c
 func (c *Polynomial) Sub(a, b *Polynomial) *Polynomial {
 
+	c.coefficients = []*big.Int{}
+
 	aLen := len(a.coefficients)
 	bLen := len(b.coefficients)
 	maxLen := 0
@@ -96,7 +100,27 @@ func (c *Polynomial) Sub(a, b *Polynomial) *Polynomial {
 	return c
 }
 
-// TODO: Переписать с учетом минуса и знаков
+// Mul - Умножает два многочлена a и b, и записывает в c
+func (c *Polynomial) Mul(a, b *Polynomial) *Polynomial {
+
+	c.coefficients = []*big.Int{}
+
+	aLen := len(a.coefficients)
+	bLen := len(b.coefficients)
+	maxLen := aLen + bLen - 1
+
+	for i := 0; i < maxLen; i++ {
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+	}
+
+	for i := 0; i < aLen; i++ {
+		for j := 0; j < bLen; j++ {
+			c.coefficients[i+j].Add(c.coefficients[i+j], new(big.Int).Mul(a.coefficients[i], b.coefficients[j]))
+		}
+	}
+
+	return c
+}
 
 // Представление полинома в виде строки
 func (c *Polynomial) String() string {
@@ -104,42 +128,62 @@ func (c *Polynomial) String() string {
 	lenCoefficients := len(c.coefficients)
 	result := ""
 
+	temp := big.NewInt(0)
+
+	// Случай длины 1
 	if lenCoefficients == 1 && c.coefficients[0].Sign() == 0 {
-		return c.coefficients[0].String()
+		return "0 "
 	}
 
+	// Общий случай
 	for i := lenCoefficients - 1; i >= 0; i-- {
 
-		if c.coefficients[i].Cmp(constNum1) == 0 {
+		temp.Set(c.coefficients[i])
 
-			if i == 0 {
-				result = result + c.coefficients[i].String()
-			} else if i == 1 {
+		// Печатаем число если оно не ноль
+		if temp.Sign() != 0 {
+
+			// Смотрим на знак
+			// Добавляем плюс, если число положительное и не самая большая степень
+			if temp.Sign() > 0 && i != lenCoefficients-1 {
+				result = result + "+ "
+			}
+			// Добавляем минус, если число отрицательное
+			if temp.Sign() < 0 {
+				result = result + "-"
+				if i != lenCoefficients-1 {
+					result = result + " "
+				}
+
+			}
+
+			// Смотрим на на коэфицент по модулю
+			temp = temp.Abs(temp)
+
+			// Печатаем если коэфицент не равен 1
+			if temp.Cmp(constNum1) == 0 && i == 0 {
+				result = result + temp.String()
+
+			} else if temp.Cmp(constNum1) != 0 {
+				result = result + temp.String()
+			}
+
+			// Смотрим на степень и ставим x
+			if i != 0 {
 				result = result + "x"
+			}
+
+			// Печатем степень
+			if i != 0 && i != 1 {
+				result = result + "^" + strconv.Itoa(i) + " "
 			} else {
-				result = result + "x^" + strconv.Itoa(i)
-			}
-
-			if i != 0 && c.coefficients[i].Cmp(constNum1) != 0 {
-				result = result + " + "
-			}
-
-		} else if c.coefficients[i].Sign() != 0 {
-
-			if i == 0 {
-				result = result + c.coefficients[i].String()
-			} else if i == 1 {
-				result = result + c.coefficients[i].String() + "x"
-			} else {
-				result = result + c.coefficients[i].String() + "x^" + strconv.Itoa(i)
-			}
-
-			if i != 0 && c.coefficients[i].Cmp(constNum1) != 0 {
-				result = result + " + "
+				result = result + " "
 			}
 
 		}
+
 	}
+
 	return result
 }
 

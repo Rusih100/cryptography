@@ -37,6 +37,11 @@ func (c *Polynomial) Set(coefficients []*big.Int) *Polynomial {
 		c.coefficients[i].Set(coefficients[i])
 	}
 
+	// Убираем лишние нули
+	for c.coefficients[len(c.coefficients)-1].Sign() == 0 && len(c.coefficients) > 1 {
+		c.coefficients = c.coefficients[:len(c.coefficients)-1]
+	}
+
 	return c
 }
 
@@ -65,6 +70,11 @@ func (c *Polynomial) Add(a, b *Polynomial) *Polynomial {
 
 	for i := 0; i < bLen; i++ {
 		c.coefficients[i].Add(c.coefficients[i], b.coefficients[i])
+	}
+
+	// Убираем лишние нули
+	for c.coefficients[len(c.coefficients)-1].Sign() == 0 && len(c.coefficients) > 1 {
+		c.coefficients = c.coefficients[:len(c.coefficients)-1]
 	}
 
 	return c
@@ -97,6 +107,11 @@ func (c *Polynomial) Sub(a, b *Polynomial) *Polynomial {
 		c.coefficients[i].Sub(c.coefficients[i], b.coefficients[i])
 	}
 
+	// Убираем лишние нули
+	for c.coefficients[len(c.coefficients)-1].Sign() == 0 && len(c.coefficients) > 1 {
+		c.coefficients = c.coefficients[:len(c.coefficients)-1]
+	}
+
 	return c
 }
 
@@ -119,7 +134,75 @@ func (c *Polynomial) Mul(a, b *Polynomial) *Polynomial {
 		}
 	}
 
+	// Убираем лишние нули
+	for c.coefficients[len(c.coefficients)-1].Sign() == 0 && len(c.coefficients) > 1 {
+		c.coefficients = c.coefficients[:len(c.coefficients)-1]
+	}
+
 	return c
+}
+
+// QuoRem - Деление с остатком многочлена a на многочлен b
+func (c *Polynomial) QuoRem(a, b *Polynomial) (quo, rem *Polynomial) {
+
+	c.coefficients = []*big.Int{}
+
+	aLen := len(a.coefficients)
+	bLen := len(b.coefficients)
+
+	// Проверка длин
+	if aLen < bLen {
+		panic("The polynomial a must be of a higher order than the polynomial b")
+	}
+
+	if bLen == 1 && b.coefficients[0].Sign() == 0 {
+		panic("Division by zero")
+	}
+
+	A := new(Polynomial)
+
+	// Копируем массив a, чтобы не изменять его
+	for i := 0; i < aLen; i++ {
+		A.coefficients = append(A.coefficients, big.NewInt(0))
+	}
+
+	for i := 0; i < aLen; i++ {
+		A.coefficients[i].Set(a.coefficients[i])
+	}
+
+	aLen = aLen - 1
+	bLen = bLen - 1
+
+	// Деление
+	QLen := aLen - bLen + 1
+
+	for i := 0; i < QLen; i++ {
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+	}
+
+	for i := aLen; i >= bLen; i-- {
+		c.coefficients[i-bLen].Set(
+			new(big.Int).Div(A.coefficients[i], b.coefficients[bLen]),
+		)
+
+		for j := bLen; j >= 0; j-- {
+			A.coefficients[i-bLen+j].Set(
+				new(big.Int).Sub(A.coefficients[i-bLen+j], new(big.Int).Mul(b.coefficients[j], c.coefficients[i-bLen])),
+			)
+		}
+	}
+
+	// Убираем лишние нули
+	for c.coefficients[len(c.coefficients)-1].Sign() == 0 && len(c.coefficients) > 1 {
+		c.coefficients = c.coefficients[:len(c.coefficients)-1]
+	}
+
+	// Убираем лишние нули
+	for A.coefficients[len(A.coefficients)-1].Sign() == 0 && len(A.coefficients) > 1 {
+		A.coefficients = A.coefficients[:len(A.coefficients)-1]
+	}
+
+	return c, A
 }
 
 // Представление полинома в виде строки

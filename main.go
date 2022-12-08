@@ -1,49 +1,26 @@
 package main
 
 import (
-	"cryptography/polynomial"
+	"cryptography/finite_field"
 	"fmt"
+	"log"
 	"math/big"
+	"os"
 )
 
 func main() {
 	//console.Menu()
+	p := big.NewInt(29)
+	Z3 := finite_field.NewFiniteField(p)
 
-	arr1 := []*big.Int{
-		big.NewInt(1),
-		big.NewInt(1),
-		big.NewInt(1),
+	fmt.Println(Z3)
+
+	if err := os.WriteFile("finite_field/cayley_table/add.txt", []byte(Z3.CayleyTableAdd()), 0666); err != nil {
+		log.Fatal(err)
 	}
 
-	x1 := new(polynomial.Polynomial).Set(arr1)
+	if err := os.WriteFile("finite_field/cayley_table/mul.txt", []byte(Z3.CayleyTableMul()), 0666); err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Println(x1)
-	fmt.Println(x1.StringCoefficients())
-
-	//arr1 := []*big.Int{
-	//	big.NewInt(0),
-	//	big.NewInt(0),
-	//	big.NewInt(2),
-	//	big.NewInt(0),
-	//}
-	//
-	//arr2 := []*big.Int{
-	//	big.NewInt(0),
-	//	big.NewInt(1),
-	//	big.NewInt(1),
-	//}
-	//
-	//x1 := new(polynomial.Polynomial).Set(arr1)
-	//x2 := new(polynomial.Polynomial).Set(arr2)
-	//
-	//quo := new(polynomial.Polynomial)
-	//rem := new(polynomial.Polynomial)
-	//
-	//quo, rem = quo.QuoRem(x1, x2)
-	//
-	//fmt.Println(x1)
-	//fmt.Println(x2)
-	//fmt.Println("-----------")
-	//fmt.Println(quo)
-	//fmt.Println(rem)
 }

@@ -206,7 +206,7 @@ func (c *Polynomial) QuoRem(a, b *Polynomial) (quo, rem *Polynomial) {
 	return c, A
 }
 
-// Представление полинома в виде строки
+// Представление полинома в виде строки вида x^3 + 2x - 1
 func (c *Polynomial) String() string {
 
 	lenCoefficients := len(c.coefficients)
@@ -268,6 +268,23 @@ func (c *Polynomial) String() string {
 
 	}
 
+	return result
+}
+
+// StringCoefficients - Представление полиноса в виде строки вектора X(3 3 2)
+func (c *Polynomial) StringCoefficients() string {
+
+	lenCoefficients := len(c.coefficients)
+	result := "P:("
+
+	for i := lenCoefficients - 1; i >= 0; i-- {
+		result = result + c.coefficients[i].String()
+		if i != 0 {
+			result = result + " "
+		} else {
+			result = result + ")"
+		}
+	}
 	return result
 }
 

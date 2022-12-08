@@ -18,6 +18,7 @@ func main() {
 	x1 := new(polynomial.Polynomial).Set(arr1)
 
 	fmt.Println(x1)
+	fmt.Println(x1.StringCoefficients())
 
 	//arr1 := []*big.Int{
 	//	big.NewInt(0),

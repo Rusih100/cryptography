@@ -1,26 +1,46 @@
 package main
 
 import (
-	"cryptography/finite_field"
+	"cryptography/polynomial"
 	"fmt"
-	"log"
 	"math/big"
-	"os"
 )
 
 func main() {
 	//console.Menu()
-	p := big.NewInt(29)
-	Z3 := finite_field.NewFiniteField(p)
 
-	fmt.Println(Z3)
-
-	if err := os.WriteFile("finite_field/cayley_table/add.txt", []byte(Z3.CayleyTableAdd()), 0666); err != nil {
-		log.Fatal(err)
+	modArr := []*big.Int{
+		big.NewInt(1),
+		big.NewInt(1),
+		big.NewInt(0),
+		big.NewInt(0),
+		big.NewInt(1),
 	}
 
-	if err := os.WriteFile("finite_field/cayley_table/mul.txt", []byte(Z3.CayleyTableMul()), 0666); err != nil {
-		log.Fatal(err)
+	offsetArr := []*big.Int{
+		big.NewInt(0),
+		big.NewInt(1),
+	}
+
+	mod := polynomial.NewPolynomial(modArr)
+	offset := polynomial.NewPolynomial(offsetArr)
+
+	fmt.Println(mod)
+	fmt.Println(offset)
+	fmt.Println("-----------")
+
+	xArr := []*big.Int{
+		big.NewInt(1),
+	}
+
+	x := polynomial.NewPolynomial(xArr)
+
+	for i := 0; i < 16; i++ {
+		fmt.Println(x)
+		x = x.Mul(offset, x)
+		_, x = new(polynomial.Polynomial).QuoRem(x, mod)
+		x.Mod(x, big.NewInt(2))
+
 	}
 
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cryptography/finite_field"
 	"cryptography/polynomial"
 	"fmt"
 	"math/big"
@@ -10,37 +11,22 @@ func main() {
 	//console.Menu()
 
 	modArr := []*big.Int{
-		big.NewInt(1),
-		big.NewInt(1),
+		big.NewInt(11),
+		big.NewInt(4),
 		big.NewInt(0),
 		big.NewInt(0),
-		big.NewInt(1),
-	}
-
-	offsetArr := []*big.Int{
 		big.NewInt(0),
 		big.NewInt(1),
 	}
 
 	mod := polynomial.NewPolynomial(modArr)
-	offset := polynomial.NewPolynomial(offsetArr)
 
-	fmt.Println(mod)
-	fmt.Println(offset)
-	fmt.Println("-----------")
+	p := big.NewInt(13)
+	n := big.NewInt(5)
 
-	xArr := []*big.Int{
-		big.NewInt(1),
-	}
+	GF := new(finite_field.GaloisField)
 
-	x := polynomial.NewPolynomial(xArr)
-
-	for i := 0; i < 16; i++ {
-		fmt.Println(x)
-		x = x.Mul(offset, x)
-		_, x = new(polynomial.Polynomial).QuoRem(x, mod)
-		x.Mod(x, big.NewInt(2))
-
-	}
+	GF.Set(p, n, mod)
+	fmt.Println(GF.String())
 
 }

@@ -81,7 +81,59 @@ func (g *GaloisField) Set(p *big.Int, n *big.Int, poly *polynomial.Polynomial) *
 	return g
 }
 
+// Add - Складывает два элемента в поле
+func (g *GaloisField) Add(a, b *polynomial.Polynomial) *polynomial.Polynomial {
+
+	maxValue := new(big.Int)
+	maxValue = cryptography.Pow(g.p, g.n)
+
+	// Проверка на принадлежность полю
+	if a.Value(g.p).Sign() < 0 || a.Value(g.p).Cmp(maxValue) >= 0 {
+		panic("The element a does not belong to the field")
+	}
+
+	if b.Value(g.p).Sign() < 0 || b.Value(g.p).Cmp(maxValue) >= 0 {
+		panic("The element b does not belong to the field")
+	}
+
+	result := new(polynomial.Polynomial)
+	result = result.Add(a, b)
+	result = result.Mod(result, g.p)
+
+	return result
+}
+
+// Mul - Умножает два элемента в поле
+func (g *GaloisField) Mul(a, b *polynomial.Polynomial) *polynomial.Polynomial {
+
+	maxValue := new(big.Int)
+	maxValue = cryptography.Pow(g.p, g.n)
+
+	// Проверка на принадлежность полю
+	if a.Value(g.p).Sign() < 0 || a.Value(g.p).Cmp(maxValue) >= 0 {
+		panic("The element a does not belong to the field")
+	}
+
+	if b.Value(g.p).Sign() < 0 || b.Value(g.p).Cmp(maxValue) >= 0 {
+		panic("The element b does not belong to the field")
+	}
+
+	result := new(polynomial.Polynomial)
+	result = result.Mul(a, b)
+	result.Mod(result, g.p)
+
+	_, result = result.QuoRem(result, g.mod)
+	result.Mod(result, g.p)
+
+	return result
+}
+
 // Строковое представление
 func (g *GaloisField) String() string {
 	return "GF(" + g.p.String() + "^" + g.n.String() + ")"
+}
+
+// NewGaloisField - Создает GaloisField и задает ему начальные значения
+func NewGaloisField(p *big.Int, n *big.Int, poly *polynomial.Polynomial) *GaloisField {
+	return new(GaloisField).Set(p, n, poly)
 }

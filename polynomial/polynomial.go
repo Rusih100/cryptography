@@ -46,6 +46,34 @@ func (c *Polynomial) Set(coefficients []*big.Int) *Polynomial {
 	return c
 }
 
+// SetPolynomial - Задает массив коэфицентов, относительно другого полинома
+func (c *Polynomial) SetPolynomial(p *Polynomial) *Polynomial {
+
+	c.coefficients = []*big.Int{}
+
+	lenCoefficients := len(p.coefficients)
+
+	if lenCoefficients == 0 {
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+		return c
+	}
+
+	for i := 0; i < lenCoefficients; i++ {
+		c.coefficients = append(c.coefficients, big.NewInt(0))
+	}
+
+	for i := 0; i < lenCoefficients; i++ {
+		c.coefficients[i].Set(p.coefficients[i])
+	}
+
+	// Убираем лишние нули
+	for c.coefficients[len(c.coefficients)-1].Sign() == 0 && len(c.coefficients) > 1 {
+		c.coefficients = c.coefficients[:len(c.coefficients)-1]
+	}
+
+	return c
+}
+
 // Add - Складывает два многочлена a и b, и записывает в c
 func (c *Polynomial) Add(_a, _b *Polynomial) *Polynomial {
 
@@ -55,23 +83,8 @@ func (c *Polynomial) Add(_a, _b *Polynomial) *Polynomial {
 	aLen := len(_a.coefficients)
 	bLen := len(_b.coefficients)
 
-	// Копируем массив a, чтобы не изменять его
-	for i := 0; i < aLen; i++ {
-		a.coefficients = append(a.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < aLen; i++ {
-		a.coefficients[i].Set(_a.coefficients[i])
-	}
-
-	// Копируем массив b, чтобы не изменять его
-	for i := 0; i < bLen; i++ {
-		b.coefficients = append(b.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < bLen; i++ {
-		b.coefficients[i].Set(_b.coefficients[i])
-	}
+	a.SetPolynomial(_a)
+	b.SetPolynomial(_b)
 
 	c.coefficients = []*big.Int{}
 	maxLen := 0
@@ -111,23 +124,8 @@ func (c *Polynomial) Sub(_a, _b *Polynomial) *Polynomial {
 	aLen := len(_a.coefficients)
 	bLen := len(_b.coefficients)
 
-	// Копируем массив a, чтобы не изменять его
-	for i := 0; i < aLen; i++ {
-		a.coefficients = append(a.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < aLen; i++ {
-		a.coefficients[i].Set(_a.coefficients[i])
-	}
-
-	// Копируем массив b, чтобы не изменять его
-	for i := 0; i < bLen; i++ {
-		b.coefficients = append(b.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < bLen; i++ {
-		b.coefficients[i].Set(_b.coefficients[i])
-	}
+	a.SetPolynomial(_a)
+	b.SetPolynomial(_b)
 
 	c.coefficients = []*big.Int{}
 	maxLen := 0
@@ -167,23 +165,8 @@ func (c *Polynomial) Mul(_a, _b *Polynomial) *Polynomial {
 	aLen := len(_a.coefficients)
 	bLen := len(_b.coefficients)
 
-	// Копируем массив a, чтобы не изменять его
-	for i := 0; i < aLen; i++ {
-		a.coefficients = append(a.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < aLen; i++ {
-		a.coefficients[i].Set(_a.coefficients[i])
-	}
-
-	// Копируем массив b, чтобы не изменять его
-	for i := 0; i < bLen; i++ {
-		b.coefficients = append(b.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < bLen; i++ {
-		b.coefficients[i].Set(_b.coefficients[i])
-	}
+	a.SetPolynomial(_a)
+	b.SetPolynomial(_b)
 
 	c.coefficients = []*big.Int{}
 
@@ -216,14 +199,7 @@ func (c *Polynomial) Mod(_a *Polynomial, _mod *big.Int) *Polynomial {
 	mod := new(big.Int)
 	mod.Set(_mod)
 
-	// Копируем массив a, чтобы не изменять его
-	for i := 0; i < aLen; i++ {
-		a.coefficients = append(a.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < aLen; i++ {
-		a.coefficients[i].Set(_a.coefficients[i])
-	}
+	a.SetPolynomial(_a)
 
 	// Взятие модуля
 
@@ -255,23 +231,8 @@ func (c *Polynomial) QuoRem(a, b *Polynomial) (quo, rem *Polynomial) {
 	aLen := len(a.coefficients)
 	bLen := len(b.coefficients)
 
-	// Копируем массив a, чтобы не изменять его
-	for i := 0; i < aLen; i++ {
-		A.coefficients = append(A.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < aLen; i++ {
-		A.coefficients[i].Set(a.coefficients[i])
-	}
-
-	// Копируем массив b, чтобы не изменять его
-	for i := 0; i < bLen; i++ {
-		B.coefficients = append(B.coefficients, big.NewInt(0))
-	}
-
-	for i := 0; i < bLen; i++ {
-		B.coefficients[i].Set(b.coefficients[i])
-	}
+	A.SetPolynomial(a)
+	B.SetPolynomial(b)
 
 	if bLen == 1 && B.coefficients[0].Sign() == 0 {
 		panic("Division by zero")

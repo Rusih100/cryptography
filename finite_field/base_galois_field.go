@@ -16,12 +16,12 @@ var (
 // Реализация базового конечного поля
 // Операции выполняются по модулю p
 
-type FiniteField struct {
+type BaseGaloisField struct {
 	p *big.Int
 }
 
 // Set - Задает начальное значение p
-func (f *FiniteField) Set(p *big.Int) *FiniteField {
+func (f *BaseGaloisField) Set(p *big.Int) *BaseGaloisField {
 
 	f.p = big.NewInt(0)
 
@@ -39,7 +39,7 @@ func (f *FiniteField) Set(p *big.Int) *FiniteField {
 }
 
 // Add - Складывает два элемента в поле
-func (f *FiniteField) Add(a, b *big.Int) *big.Int {
+func (f *BaseGaloisField) Add(a, b *big.Int) *big.Int {
 
 	// Проверки
 	if a.Sign() < 0 || a.Cmp(f.p) >= 0 {
@@ -58,7 +58,7 @@ func (f *FiniteField) Add(a, b *big.Int) *big.Int {
 }
 
 // Mul - Умножает два элемента в поле
-func (f *FiniteField) Mul(a, b *big.Int) *big.Int {
+func (f *BaseGaloisField) Mul(a, b *big.Int) *big.Int {
 
 	// Проверки
 	if a.Sign() < 0 || a.Cmp(f.p) >= 0 {
@@ -76,14 +76,14 @@ func (f *FiniteField) Mul(a, b *big.Int) *big.Int {
 }
 
 // Строковое представление
-func (f *FiniteField) String() string {
+func (f *BaseGaloisField) String() string {
 	return "GF(" + f.p.String() + ")"
 }
 
 // CayleyTableAdd - Таблица Кэли для сложения
 //
 // Файл сохраняется в finite_field/cayley_table
-func (f *FiniteField) CayleyTableAdd() {
+func (f *BaseGaloisField) CayleyTableAdd() {
 
 	name := f.p.String() + "_add"
 
@@ -138,7 +138,7 @@ func (f *FiniteField) CayleyTableAdd() {
 // CayleyTableMul - Таблица Кэли для умножения
 //
 // Файл сохраняется в finite_field/cayley_table
-func (f *FiniteField) CayleyTableMul() {
+func (f *BaseGaloisField) CayleyTableMul() {
 
 	name := f.p.String() + "_mul"
 
@@ -192,7 +192,7 @@ func (f *FiniteField) CayleyTableMul() {
 	}
 }
 
-// NewFiniteField - Создает FiniteField и задает ему начальное значение p
-func NewFiniteField(p *big.Int) *FiniteField {
-	return new(FiniteField).Set(p)
+// NewFiniteField - Создает BaseGaloisField и задает ему начальное значение p
+func NewFiniteField(p *big.Int) *BaseGaloisField {
+	return new(BaseGaloisField).Set(p)
 }

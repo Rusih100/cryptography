@@ -143,7 +143,7 @@ func (g *GaloisField) CayleyTableAdd() {
 	maxValue := new(big.Int)
 	maxValue = cryptography.Pow(g.p, g.n)
 
-	name := g.p.String() + "^" + g.n.String() + "add"
+	name := g.p.String() + "^" + g.n.String() + "_add"
 
 	// Создание файла
 	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
@@ -199,9 +199,199 @@ func (g *GaloisField) CayleyTableAdd() {
 		iArr = append(iArr, big.NewInt(0))
 	}
 
-	var jArr []*big.Int
-	for j := big.NewInt(0); j.Cmp(g.n) < 0; j.Add(j, constNum1) {
-		jArr = append(jArr, big.NewInt(0))
+	a := new(polynomial.Polynomial)
+	b := new(polynomial.Polynomial)
+
+	for I := big.NewInt(1); I.Cmp(maxValue) < 0; I.Add(I, constNum1) {
+
+		jArr := []*big.Int{}
+		for j := big.NewInt(0); j.Cmp(g.n) < 0; j.Add(j, constNum1) {
+			jArr = append(jArr, big.NewInt(0))
+		}
+
+		a.Set(iArr)
+		result = a.String() + "\t"
+
+		for J := big.NewInt(1); J.Cmp(maxValue) < 0; J.Add(J, constNum1) {
+
+			b.Set(jArr)
+
+			temp = temp.Add(a, b)
+			temp = temp.Mod(temp, g.p)
+
+			result = result + temp.String()
+
+			if J.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+				result = result + "\t"
+			}
+
+			jArr[0] = jArr[0].Add(jArr[0], constNum1)
+
+			for j := 0; j < len(jArr); j++ {
+
+				if jArr[j].Cmp(g.p) == 0 {
+					jArr[j].Mod(jArr[j], g.p)
+					jArr[j+1].Add(jArr[j+1], constNum1)
+				}
+			}
+
+		}
+
+		result = result + "\n"
+
+		_, err = file.WriteString(result)
+		if err != nil {
+			panic(err)
+		}
+
+		// Увеличение полинома a
+
+		if I.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+			result = result + "\t"
+		}
+
+		iArr[0] = iArr[0].Add(iArr[0], constNum1)
+
+		for i := 0; i < len(iArr); i++ {
+
+			if iArr[i].Cmp(g.p) == 0 {
+				iArr[i].Mod(iArr[i], g.p)
+				iArr[i+1].Add(iArr[i+1], constNum1)
+			}
+		}
+
+	}
+
+}
+
+// CayleyTableMul - Таблица Кэли для умножения
+//
+// Файл сохраняется в finite_field/cayley_table
+func (g *GaloisField) CayleyTableMul() {
+
+	// Максимальное количество элементов
+	maxValue := new(big.Int)
+	maxValue = cryptography.Pow(g.p, g.n)
+
+	name := g.p.String() + "^" + g.n.String() + "_mul"
+
+	// Создание файла
+	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+
+	// Создаем массив для итераций по многочленам
+	var iArr []*big.Int
+	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+		iArr = append(iArr, big.NewInt(0))
+	}
+
+	// Первая строка
+	result := "*\t"
+
+	temp := new(polynomial.Polynomial)
+
+	for O := big.NewInt(1); O.Cmp(maxValue) < 0; O.Add(O, constNum1) {
+
+		temp.Set(iArr)
+		result = result + temp.String()
+
+		if O.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+			result = result + "\t"
+		}
+
+		iArr[0] = iArr[0].Add(iArr[0], constNum1)
+
+		for i := 0; i < len(iArr); i++ {
+
+			if iArr[i].Cmp(g.p) == 0 {
+				iArr[i].Mod(iArr[i], g.p)
+				iArr[i+1].Add(iArr[i+1], constNum1)
+			}
+		}
+
+	}
+	result = result + "\n"
+
+	_, err = file.WriteString(result)
+	if err != nil {
+		panic(err)
+	}
+
+	// Массив строк
+
+	// Создаем массивы для итерации
+	iArr = []*big.Int{}
+	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+		iArr = append(iArr, big.NewInt(0))
+	}
+
+	a := new(polynomial.Polynomial)
+	b := new(polynomial.Polynomial)
+
+	for I := big.NewInt(1); I.Cmp(maxValue) < 0; I.Add(I, constNum1) {
+
+		jArr := []*big.Int{}
+		for j := big.NewInt(0); j.Cmp(g.n) < 0; j.Add(j, constNum1) {
+			jArr = append(jArr, big.NewInt(0))
+		}
+
+		a.Set(iArr)
+		result = a.String() + "\t"
+
+		for J := big.NewInt(1); J.Cmp(maxValue) < 0; J.Add(J, constNum1) {
+
+			b.Set(jArr)
+
+			temp = temp.Mul(a, b)
+			temp = temp.Mod(temp, g.p)
+			_, temp = temp.QuoRem(temp, g.mod)
+			temp = temp.Mod(temp, g.p)
+
+			result = result + temp.String()
+
+			if J.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+				result = result + "\t"
+			}
+
+			jArr[0] = jArr[0].Add(jArr[0], constNum1)
+
+			for j := 0; j < len(jArr); j++ {
+
+				if jArr[j].Cmp(g.p) == 0 {
+					jArr[j].Mod(jArr[j], g.p)
+					jArr[j+1].Add(jArr[j+1], constNum1)
+				}
+			}
+
+		}
+
+		result = result + "\n"
+
+		_, err = file.WriteString(result)
+		if err != nil {
+			panic(err)
+		}
+
+		// Увеличение полинома a
+
+		if I.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+			result = result + "\t"
+		}
+
+		iArr[0] = iArr[0].Add(iArr[0], constNum1)
+
+		for i := 0; i < len(iArr); i++ {
+
+			if iArr[i].Cmp(g.p) == 0 {
+				iArr[i].Mod(iArr[i], g.p)
+				iArr[i+1].Add(iArr[i+1], constNum1)
+			}
+		}
+
 	}
 
 }

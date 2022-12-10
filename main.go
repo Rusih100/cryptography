@@ -26,5 +26,6 @@ func main() {
 	fmt.Println(GF)
 
 	GF.CayleyTableAdd()
+	GF.CayleyTableMul()
 
 }

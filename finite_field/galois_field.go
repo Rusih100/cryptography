@@ -4,6 +4,7 @@ import (
 	"cryptography/cryptography"
 	"cryptography/polynomial"
 	"math/big"
+	"os"
 )
 
 // Реализация расширения базового конечного поля
@@ -131,6 +132,78 @@ func (g *GaloisField) Mul(a, b *polynomial.Polynomial) *polynomial.Polynomial {
 // Строковое представление
 func (g *GaloisField) String() string {
 	return "GF(" + g.p.String() + "^" + g.n.String() + ")"
+}
+
+// CayleyTableAdd - Таблица Кэли для сложения
+//
+// Файл сохраняется в finite_field/cayley_table
+func (g *GaloisField) CayleyTableAdd() {
+
+	// Максимальное количество элементов
+	maxValue := new(big.Int)
+	maxValue = cryptography.Pow(g.p, g.n)
+
+	name := g.p.String() + "^" + g.n.String() + "add"
+
+	// Создание файла
+	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+
+	// Создаем массив для итераций по многочленам
+	var iArr []*big.Int
+	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+		iArr = append(iArr, big.NewInt(0))
+	}
+
+	// Первая строка
+	result := "+\t"
+
+	temp := new(polynomial.Polynomial)
+
+	for O := big.NewInt(1); O.Cmp(maxValue) < 0; O.Add(O, constNum1) {
+
+		temp.Set(iArr)
+		result = result + temp.String()
+
+		if O.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+			result = result + "\t"
+		}
+
+		iArr[0] = iArr[0].Add(iArr[0], constNum1)
+
+		for i := 0; i < len(iArr); i++ {
+
+			if iArr[i].Cmp(g.p) == 0 {
+				iArr[i].Mod(iArr[i], g.p)
+				iArr[i+1].Add(iArr[i+1], constNum1)
+			}
+		}
+
+	}
+	result = result + "\n"
+
+	_, err = file.WriteString(result)
+	if err != nil {
+		panic(err)
+	}
+
+	// Массив строк
+
+	// Создаем массивы для итерации
+	iArr = []*big.Int{}
+	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+		iArr = append(iArr, big.NewInt(0))
+	}
+
+	var jArr []*big.Int
+	for j := big.NewInt(0); j.Cmp(g.n) < 0; j.Add(j, constNum1) {
+		jArr = append(jArr, big.NewInt(0))
+	}
+
 }
 
 // NewGaloisField - Создает GaloisField и задает ему начальные значения

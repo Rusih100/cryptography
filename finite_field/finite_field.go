@@ -101,7 +101,11 @@ func (f *FiniteField) CayleyTableAdd() {
 	temp := new(big.Int)
 
 	for i := big.NewInt(0); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
-		result = result + i.String() + "\t"
+		result = result + i.String()
+
+		if i.Cmp(new(big.Int).Sub(f.p, constNum1)) != 0 {
+			result = result + "\t"
+		}
 	}
 	result = result + "\n"
 
@@ -152,7 +156,11 @@ func (f *FiniteField) CayleyTableMul() {
 	temp := new(big.Int)
 
 	for i := big.NewInt(0); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
-		result = result + i.String() + "\t"
+		result = result + i.String()
+
+		if i.Cmp(new(big.Int).Sub(f.p, constNum1)) != 0 {
+			result = result + "\t"
+		}
 	}
 	result = result + "\n"
 

@@ -3,6 +3,7 @@ package finite_field
 import (
 	"cryptography/cryptography"
 	"math/big"
+	"os"
 )
 
 // Константы для упрощения кода
@@ -80,47 +81,107 @@ func (f *FiniteField) String() string {
 }
 
 // CayleyTableAdd - Таблица Кэли для сложения
-func (f *FiniteField) CayleyTableAdd() string {
+//
+// Файл сохраняется в finite_field/cayley_table
+func (f *FiniteField) CayleyTableAdd() {
+
+	name := f.p.String() + "_add"
+
+	// Создание файла
+	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+
+	// Первая строка
 	result := "+\t"
 
 	temp := new(big.Int)
+
 	for i := big.NewInt(0); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
 		result = result + i.String() + "\t"
 	}
 	result = result + "\n"
 
+	_, err = file.WriteString(result)
+	if err != nil {
+		panic(err)
+	}
+
+	result = ""
+
 	for i := big.NewInt(0); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
-		result = result + i.String() + "\t"
+		result = i.String() + "\t"
 
 		for j := big.NewInt(0); j.Cmp(f.p) < 0; j.Add(j, constNum1) {
 			temp = f.Add(i, j)
-			result = result + temp.String() + "\t"
+			result = result + temp.String()
+
+			if j.Cmp(new(big.Int).Sub(f.p, constNum1)) != 0 {
+				result = result + "\t"
+			}
 		}
 		result = result + "\n"
+		_, err = file.WriteString(result)
+		if err != nil {
+			panic(err)
+		}
 	}
-	return result
 }
 
 // CayleyTableMul - Таблица Кэли для умножения
-func (f *FiniteField) CayleyTableMul() string {
+//
+// Файл сохраняется в finite_field/cayley_table
+func (f *FiniteField) CayleyTableMul() {
+
+	name := f.p.String() + "_mul"
+
+	// Создание файла
+	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close()
+
+	// Первая строка
 	result := "*\t"
 
 	temp := new(big.Int)
-	for i := big.NewInt(1); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
+
+	for i := big.NewInt(0); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
 		result = result + i.String() + "\t"
 	}
 	result = result + "\n"
 
-	for i := big.NewInt(1); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
-		result = result + i.String() + "\t"
+	_, err = file.WriteString(result)
+	if err != nil {
+		panic(err)
+	}
 
-		for j := big.NewInt(1); j.Cmp(f.p) < 0; j.Add(j, constNum1) {
+	result = ""
+
+	for i := big.NewInt(0); i.Cmp(f.p) < 0; i.Add(i, constNum1) {
+		result = i.String() + "\t"
+
+		for j := big.NewInt(0); j.Cmp(f.p) < 0; j.Add(j, constNum1) {
 			temp = f.Mul(i, j)
-			result = result + temp.String() + "\t"
+			temp.Mod(temp, f.p)
+
+			result = result + temp.String()
+
+			if j.Cmp(new(big.Int).Sub(f.p, constNum1)) != 0 {
+				result = result + "\t"
+			}
 		}
 		result = result + "\n"
+		_, err = file.WriteString(result)
+		if err != nil {
+			panic(err)
+		}
 	}
-	return result
 }
 
 // NewFiniteField - Создает FiniteField и задает ему начальное значение p

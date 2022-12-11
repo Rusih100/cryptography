@@ -96,7 +96,7 @@ func (f *BaseGaloisField) CayleyTableAdd() {
 	defer file.Close()
 
 	// Первая строка
-	result := "+\t"
+	result := "\t"
 
 	temp := new(big.Int)
 
@@ -151,7 +151,7 @@ func (f *BaseGaloisField) CayleyTableMul() {
 	defer file.Close()
 
 	// Первая строка
-	result := "*\t"
+	result := "\t"
 
 	temp := new(big.Int)
 

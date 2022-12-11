@@ -10,13 +10,12 @@ import (
 func main() {
 	//console.Menu()
 
-	p := big.NewInt(2)
-	n := big.NewInt(3)
+	p := big.NewInt(11)
+	n := big.NewInt(2)
 
 	polyArr := []*big.Int{
-		big.NewInt(1),
-		big.NewInt(1),
-		big.NewInt(0),
+		big.NewInt(2),
+		big.NewInt(7),
 		big.NewInt(1),
 	}
 

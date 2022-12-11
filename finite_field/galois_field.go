@@ -155,21 +155,21 @@ func (g *GaloisField) CayleyTableAdd() {
 
 	// Создаем массив для итераций по многочленам
 	var iArr []*big.Int
-	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+	for i := big.NewInt(0); i.Cmp(g.n) <= 0; i.Add(i, constNum1) {
 		iArr = append(iArr, big.NewInt(0))
 	}
 
 	// Первая строка
-	result := "+\t"
+	result := "\t"
 
 	temp := new(polynomial.Polynomial)
 
-	for O := big.NewInt(1); O.Cmp(maxValue) < 0; O.Add(O, constNum1) {
+	for O := big.NewInt(1); O.Cmp(maxValue) <= 0; O.Add(O, constNum1) {
 
 		temp.Set(iArr)
 		result = result + temp.String()
 
-		if O.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+		if O.Cmp(maxValue) != 0 {
 			result = result + "\t"
 		}
 
@@ -195,24 +195,24 @@ func (g *GaloisField) CayleyTableAdd() {
 
 	// Создаем массивы для итерации
 	iArr = []*big.Int{}
-	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+	for i := big.NewInt(0); i.Cmp(g.n) <= 0; i.Add(i, constNum1) {
 		iArr = append(iArr, big.NewInt(0))
 	}
 
 	a := new(polynomial.Polynomial)
 	b := new(polynomial.Polynomial)
 
-	for I := big.NewInt(1); I.Cmp(maxValue) < 0; I.Add(I, constNum1) {
+	for I := big.NewInt(1); I.Cmp(maxValue) <= 0; I.Add(I, constNum1) {
 
 		jArr := []*big.Int{}
-		for j := big.NewInt(0); j.Cmp(g.n) < 0; j.Add(j, constNum1) {
+		for j := big.NewInt(0); j.Cmp(g.n) <= 0; j.Add(j, constNum1) {
 			jArr = append(jArr, big.NewInt(0))
 		}
 
 		a.Set(iArr)
 		result = a.String() + "\t"
 
-		for J := big.NewInt(1); J.Cmp(maxValue) < 0; J.Add(J, constNum1) {
+		for J := big.NewInt(1); J.Cmp(maxValue) <= 0; J.Add(J, constNum1) {
 
 			b.Set(jArr)
 
@@ -221,7 +221,7 @@ func (g *GaloisField) CayleyTableAdd() {
 
 			result = result + temp.String()
 
-			if J.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+			if J.Cmp(maxValue) != 0 {
 				result = result + "\t"
 			}
 
@@ -285,21 +285,21 @@ func (g *GaloisField) CayleyTableMul() {
 
 	// Создаем массив для итераций по многочленам
 	var iArr []*big.Int
-	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+	for i := big.NewInt(0); i.Cmp(g.n) <= 0; i.Add(i, constNum1) {
 		iArr = append(iArr, big.NewInt(0))
 	}
 
 	// Первая строка
-	result := "*\t"
+	result := "\t"
 
 	temp := new(polynomial.Polynomial)
 
-	for O := big.NewInt(1); O.Cmp(maxValue) < 0; O.Add(O, constNum1) {
+	for O := big.NewInt(1); O.Cmp(maxValue) <= 0; O.Add(O, constNum1) {
 
 		temp.Set(iArr)
 		result = result + temp.String()
 
-		if O.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+		if O.Cmp(maxValue) != 0 {
 			result = result + "\t"
 		}
 
@@ -325,24 +325,24 @@ func (g *GaloisField) CayleyTableMul() {
 
 	// Создаем массивы для итерации
 	iArr = []*big.Int{}
-	for i := big.NewInt(0); i.Cmp(g.n) < 0; i.Add(i, constNum1) {
+	for i := big.NewInt(0); i.Cmp(g.n) <= 0; i.Add(i, constNum1) {
 		iArr = append(iArr, big.NewInt(0))
 	}
 
 	a := new(polynomial.Polynomial)
 	b := new(polynomial.Polynomial)
 
-	for I := big.NewInt(1); I.Cmp(maxValue) < 0; I.Add(I, constNum1) {
+	for I := big.NewInt(1); I.Cmp(maxValue) <= 0; I.Add(I, constNum1) {
 
 		jArr := []*big.Int{}
-		for j := big.NewInt(0); j.Cmp(g.n) < 0; j.Add(j, constNum1) {
+		for j := big.NewInt(0); j.Cmp(g.n) <= 0; j.Add(j, constNum1) {
 			jArr = append(jArr, big.NewInt(0))
 		}
 
 		a.Set(iArr)
 		result = a.String() + "\t"
 
-		for J := big.NewInt(1); J.Cmp(maxValue) < 0; J.Add(J, constNum1) {
+		for J := big.NewInt(1); J.Cmp(maxValue) <= 0; J.Add(J, constNum1) {
 
 			b.Set(jArr)
 
@@ -353,7 +353,7 @@ func (g *GaloisField) CayleyTableMul() {
 
 			result = result + temp.String()
 
-			if J.Cmp(new(big.Int).Sub(maxValue, constNum1)) != 0 {
+			if J.Cmp(maxValue) != 0 {
 				result = result + "\t"
 			}
 

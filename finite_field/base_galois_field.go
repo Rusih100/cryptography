@@ -192,7 +192,7 @@ func (f *BaseGaloisField) CayleyTableMul() {
 	}
 }
 
-// NewFiniteField - Создает BaseGaloisField и задает ему начальное значение p
-func NewFiniteField(p *big.Int) *BaseGaloisField {
+// NewBaseGaloisField - Создает BaseGaloisField и задает ему начальное значение p
+func NewBaseGaloisField(p *big.Int) *BaseGaloisField {
 	return new(BaseGaloisField).Set(p)
 }

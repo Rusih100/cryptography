@@ -21,6 +21,7 @@ func Menu() {
 		" 9. Решение сравнения первой степени\n" +
 		"10. Решение сравнения второй степени\n" +
 		"11. Решение системы сравнений\n" +
+		"12. Построение конечных полей\n" +
 		"\n" +
 		"e - выход из программы\n"
 
@@ -70,6 +71,9 @@ func Menu() {
 				switchFlag = false
 			case "11":
 				ModuloComparisonSystemConsole()
+				switchFlag = false
+			case "12":
+				GaloisFieldMenu()
 				switchFlag = false
 
 			case "e":

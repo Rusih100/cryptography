@@ -1,7 +1,7 @@
 package finite_field
 
 import (
-	"cryptography/cryptography"
+	"cryptography/crypto_math"
 	"math/big"
 	"os"
 )
@@ -29,7 +29,7 @@ func (f *BaseGaloisField) Set(p *big.Int) *BaseGaloisField {
 		panic("p >= 2")
 	}
 
-	if !cryptography.MillerRabinTest(p) {
+	if !crypto_math.MillerRabinTest(p) {
 		panic("p is a prime number")
 	}
 

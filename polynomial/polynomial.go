@@ -1,7 +1,7 @@
 package polynomial
 
 import (
-	"cryptography/cryptography"
+	"cryptography/crypto_math"
 	"math/big"
 	"strconv"
 )
@@ -376,7 +376,7 @@ func (c *Polynomial) Value(_x *big.Int) *big.Int {
 	cLen := len(c.coefficients)
 
 	for i := 0; i < cLen; i++ {
-		temp = cryptography.Pow(x, big.NewInt(int64(i)))
+		temp = crypto_math.Pow(x, big.NewInt(int64(i)))
 		temp = temp.Mul(temp, c.coefficients[i])
 		result = result.Add(result, temp)
 	}

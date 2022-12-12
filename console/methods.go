@@ -1,7 +1,7 @@
 package console
 
 import (
-	"cryptography/cryptography"
+	"cryptography/crypto_math"
 	"fmt"
 	"math/big"
 )
@@ -33,7 +33,7 @@ func EuclidAlgorithmConsole() {
 		a := new(big.Int)
 		b := new(big.Int)
 
-		m, a, b = cryptography.EuclidAlgorithm(x, y)
+		m, a, b = crypto_math.EuclidAlgorithm(x, y)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println("m =", m)
@@ -87,7 +87,7 @@ func PowConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println("\nРезультат:")
-		fmt.Println(cryptography.Pow(a, n))
+		fmt.Println(crypto_math.Pow(a, n))
 
 		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
@@ -143,7 +143,7 @@ func PowModConsole() {
 		mod.SetString(modString, 10)
 
 		res := new(big.Int)
-		res = cryptography.PowMod(a, n, mod)
+		res = crypto_math.PowMod(a, n, mod)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println(res)
@@ -195,7 +195,7 @@ func JacobiConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println("\nРезультат:")
-		fmt.Println(cryptography.Jacobi(a, n))
+		fmt.Println(crypto_math.Jacobi(a, n))
 
 		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
@@ -237,7 +237,7 @@ func FermatTestConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println()
-		if cryptography.FermatTest(n) {
+		if crypto_math.FermatTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
@@ -283,7 +283,7 @@ func SolovayStrassenTestConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println()
-		if cryptography.SolovayStrassenTest(n) {
+		if crypto_math.SolovayStrassenTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
@@ -329,7 +329,7 @@ func MillerRabinTestConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println()
-		if cryptography.MillerRabinTest(n) {
+		if crypto_math.MillerRabinTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
@@ -375,7 +375,7 @@ func SimpleNumberConsole() {
 		_, _ = fmt.Scan(&t)
 
 		fmt.Println("\nРезультат:")
-		fmt.Println(cryptography.SimpleNumber(k, t))
+		fmt.Println(crypto_math.SimpleNumber(k, t))
 
 		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
@@ -435,7 +435,7 @@ func ModuloComparisonFirstConsole() {
 		x1 := new(big.Int)
 		offset := new(big.Int)
 
-		countSolutions, x1, offset = cryptography.ModuloComparisonFirst(a, b, mod)
+		countSolutions, x1, offset = crypto_math.ModuloComparisonFirst(a, b, mod)
 
 		fmt.Println("\nРезультат:")
 
@@ -524,7 +524,7 @@ func ModuloComparisonSecondConsole() {
 		x1 := new(big.Int)
 		x2 := new(big.Int)
 
-		x1, x2 = cryptography.ModuloComparisonSecond(a, p)
+		x1, x2 = crypto_math.ModuloComparisonSecond(a, p)
 
 		fmt.Println("\nРезультат:")
 
@@ -601,7 +601,7 @@ func ModuloComparisonSystemConsole() {
 		}
 		fmt.Print("]\n")
 
-		x = cryptography.ModuloComparisonSystem(bArray, mArray)
+		x = crypto_math.ModuloComparisonSystem(bArray, mArray)
 
 		fmt.Println("\nРезультат:")
 

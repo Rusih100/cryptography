@@ -1,7 +1,7 @@
 package finite_field
 
 import (
-	"cryptography/cryptography"
+	"cryptography/crypto_math"
 	"cryptography/polynomial"
 	"math/big"
 	"os"
@@ -27,7 +27,7 @@ func (g *GaloisField) Set(p *big.Int, n *big.Int, poly *polynomial.Polynomial) *
 		panic("p >= 2")
 	}
 
-	if !cryptography.MillerRabinTest(p) {
+	if !crypto_math.MillerRabinTest(p) {
 		panic("p is a prime number")
 	}
 
@@ -73,7 +73,7 @@ func (g *GaloisField) Set(p *big.Int, n *big.Int, poly *polynomial.Polynomial) *
 	}
 
 	want := new(big.Int)
-	want = cryptography.Pow(g.p, g.n)
+	want = crypto_math.Pow(g.p, g.n)
 
 	if want.Cmp(counter) != 0 {
 		panic("The field cannot be created")
@@ -86,7 +86,7 @@ func (g *GaloisField) Set(p *big.Int, n *big.Int, poly *polynomial.Polynomial) *
 func (g *GaloisField) Add(a, b *polynomial.Polynomial) *polynomial.Polynomial {
 
 	maxValue := new(big.Int)
-	maxValue = cryptography.Pow(g.p, g.n)
+	maxValue = crypto_math.Pow(g.p, g.n)
 
 	// Проверка на принадлежность полю
 	if a.Value(g.p).Sign() < 0 || a.Value(g.p).Cmp(maxValue) >= 0 {
@@ -108,7 +108,7 @@ func (g *GaloisField) Add(a, b *polynomial.Polynomial) *polynomial.Polynomial {
 func (g *GaloisField) Mul(a, b *polynomial.Polynomial) *polynomial.Polynomial {
 
 	maxValue := new(big.Int)
-	maxValue = cryptography.Pow(g.p, g.n)
+	maxValue = crypto_math.Pow(g.p, g.n)
 
 	// Проверка на принадлежность полю
 	if a.Value(g.p).Sign() < 0 || a.Value(g.p).Cmp(maxValue) >= 0 {
@@ -141,7 +141,7 @@ func (g *GaloisField) CayleyTableAdd() {
 
 	// Максимальное количество элементов
 	maxValue := new(big.Int)
-	maxValue = cryptography.Pow(g.p, g.n)
+	maxValue = crypto_math.Pow(g.p, g.n)
 
 	name := g.p.String() + "^" + g.n.String() + "_add"
 
@@ -271,7 +271,7 @@ func (g *GaloisField) CayleyTableMul() {
 
 	// Максимальное количество элементов
 	maxValue := new(big.Int)
-	maxValue = cryptography.Pow(g.p, g.n)
+	maxValue = crypto_math.Pow(g.p, g.n)
 
 	name := g.p.String() + "^" + g.n.String() + "_mul"
 

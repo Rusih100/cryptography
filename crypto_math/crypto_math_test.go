@@ -1,4 +1,4 @@
-package cryptography
+package crypto_math
 
 import (
 	"math/big"

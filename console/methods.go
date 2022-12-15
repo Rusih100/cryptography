@@ -33,7 +33,7 @@ func EuclidAlgorithmConsole() {
 		a := new(big.Int)
 		b := new(big.Int)
 
-		m, a, b = crypto_math.EuclidAlgorithm(x, y)
+		m, a, b = crypto_math.AdvancedEuclidAlgorithm(x, y)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println("m =", m)

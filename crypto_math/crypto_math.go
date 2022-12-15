@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-// 1 лабараторная работа
-
 // Константы для упрощения кода
 // Не изменять в алгоритмах!
 var (
@@ -22,12 +20,12 @@ var (
 
 // 1. - OK (Сдано)
 
-// EuclidAlgorithm - обобщенный (расширенный) алгоритм Евклида.
+// AdvancedEuclidAlgorithm - обобщенный (расширенный) алгоритм Евклида.
 //
-// Вход: положительные числа x и y отличные от нуля.
+// Вход: натуральные числа x и y отличные от нуля.
 //
-// Выход: m, a, b - модуль и его линейное представление.
-func EuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
+// Выход: m, a, b - наибольший общий делитель и его линейное представление.
+func AdvancedEuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
 
 	// Копируем значения, чтобы не менять значения по указателю
 	x := new(big.Int)
@@ -45,7 +43,7 @@ func EuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
 
 	// x < y
 	if x.Cmp(y) == -1 {
-		*x, *y = *y, *x
+		x, y = y, x
 		flagSwap = true
 	}
 
@@ -89,10 +87,48 @@ func EuclidAlgorithm(_x *big.Int, _y *big.Int) (m, a, b *big.Int) {
 		b = b2
 	}
 	if flagSwap {
-		*a, *b = *b, *a
+		a, b = b, a
 	}
 
 	return m, a, b
+}
+
+// EuclidAlgorithm - алгоритм Евклида для целых чисел.
+//
+// Вход: целые числа x и y.
+//
+// Выход: m - наибольший общий делитель.
+func EuclidAlgorithm(_x *big.Int, _y *big.Int) *big.Int {
+
+	// Копируем значения, чтобы не менять значения по указателю
+	x := new(big.Int)
+	y := new(big.Int)
+
+	x.Set(_x)
+	y.Set(_y)
+
+	// x < y
+	if x.Cmp(y) == -1 {
+		x, y = y, x
+	}
+
+	// Если числа отрицательные
+	if x.Sign() < 0 {
+		x = x.Neg(x)
+	}
+
+	if y.Sign() < 0 {
+		y = y.Neg(y)
+	}
+
+	r := big.NewInt(0)
+
+	for y.Sign() != 0 {
+		r = r.Mod(x, y)
+		x.Set(y)
+		y.Set(r)
+	}
+	return x
 }
 
 // 2. - OK (Сдано)
@@ -211,7 +247,7 @@ func Jacobi(_a *big.Int, _n *big.Int) int64 {
 
 	// 1. Проверка взаимной простоты
 	gcd := new(big.Int)
-	gcd, _, _ = EuclidAlgorithm(a, n)
+	gcd = EuclidAlgorithm(a, n)
 
 	// gcd != 1
 	if gcd.Cmp(constNum1) != 0 {
@@ -442,7 +478,7 @@ func MillerRabinTest(_n *big.Int) bool {
 	return true
 }
 
-// 8. - OK
+// 8. - OK (Сдано)
 
 // RandNumber - Генерация k-битного случайного нечетного числа.
 //
@@ -504,7 +540,7 @@ func SimpleNumber(k int, t int) (result *big.Int) {
 	return randNumber
 }
 
-// 9. - OK
+// 9. - OK (Сдано)
 
 // InverseElement - Нахождение обратного элемента по модулю через расширенный алгоритм Евклида.
 //
@@ -531,7 +567,7 @@ func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 		panic("mod > 0")
 	}
 
-	_, _, result = EuclidAlgorithm(mod, a)
+	_, _, result = AdvancedEuclidAlgorithm(mod, a)
 
 	return result
 }
@@ -570,7 +606,7 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSoluti
 
 	// Проверяем разрешимость сравнения
 	gcd := new(big.Int)
-	gcd, _, _ = EuclidAlgorithm(a, mod)
+	gcd = EuclidAlgorithm(a, mod)
 
 	// Если неразрешимо
 	// b (mod gcd) != 0
@@ -606,7 +642,7 @@ func ModuloComparisonFirst(_a *big.Int, _b *big.Int, _mod *big.Int) (countSoluti
 	return gcd, x, mod1
 }
 
-// 10. - OK
+// 10. - OK (Сдано)
 
 // ModuloComparisonSecond - Решение сравнения второй степени.
 //
@@ -750,7 +786,7 @@ func ModuloComparisonSecond(_a *big.Int, _p *big.Int) (xPos, xNeg *big.Int) {
 	return xPos, xNeg
 }
 
-// 11. - OK
+// 11. - OK (Сдано)
 
 // ModuloComparisonSystem - Решение системы сравнений.
 //
@@ -786,7 +822,7 @@ func ModuloComparisonSystem(bArray []*big.Int, mArray []*big.Int) (result *big.I
 			x = mArray[i]
 			y = mArray[j]
 
-			testGCD, _, _ = EuclidAlgorithm(x, y)
+			testGCD = EuclidAlgorithm(x, y)
 
 			if testGCD.Cmp(constNum1) != 0 {
 				return nil

@@ -1,25 +1,20 @@
 package main
 
-import "cryptography/console"
+import (
+	"cryptography/factorization"
+	"fmt"
+	"math/big"
+)
 
 func main() {
-	console.Menu()
 
-	//p := big.NewInt(3)
-	//n := big.NewInt(2)
-	//
-	//polyArr := []*big.Int{
-	//	big.NewInt(2),
-	//	big.NewInt(2),
-	//	big.NewInt(1),
-	//}
-	//
-	//poly := polynomial.NewPolynomial(polyArr)
-	//
-	//GF := finite_field.NewGaloisField(p, n, poly)
-	//fmt.Println(GF)
-	//
-	//GF.CayleyTableAdd()
-	//GF.CayleyTableMul()
+	//console.Menu()
+
+	num := big.NewInt(2873)
+
+	factor := new(big.Int)
+
+	factor = factorization.RoOnePollardFactorization(num)
+	fmt.Println(factor)
 
 }

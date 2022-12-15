@@ -7,9 +7,9 @@ import (
 
 // Тесты только для детерменированных алгоритмов
 
-// Алгоритм Евклида
+// Расширенный Алгоритм Евклида
 
-func TestEuclidAlgorithm1(t *testing.T) {
+func TestAdvancedEuclidAlgorithm1(t *testing.T) {
 	x := big.NewInt(13)
 	y := big.NewInt(17)
 
@@ -21,7 +21,7 @@ func TestEuclidAlgorithm1(t *testing.T) {
 	a := new(big.Int)
 	b := new(big.Int)
 
-	gcd, a, b = EuclidAlgorithm(x, y)
+	gcd, a, b = AdvancedEuclidAlgorithm(x, y)
 
 	subTest := new(big.Int).Add(
 		new(big.Int).Mul(x, a),
@@ -29,6 +29,97 @@ func TestEuclidAlgorithm1(t *testing.T) {
 	)
 
 	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestAdvancedEuclidAlgorithm2(t *testing.T) {
+	x := big.NewInt(17)
+	y := big.NewInt(13)
+
+	want := big.NewInt(1)
+
+	//
+
+	gcd := new(big.Int)
+	a := new(big.Int)
+	b := new(big.Int)
+
+	gcd, a, b = AdvancedEuclidAlgorithm(x, y)
+
+	subTest := new(big.Int).Add(
+		new(big.Int).Mul(x, a),
+		new(big.Int).Mul(y, b),
+	)
+
+	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestAdvancedEuclidAlgorithm3(t *testing.T) {
+	x := big.NewInt(81)
+	y := big.NewInt(27)
+
+	want := big.NewInt(27)
+
+	//
+
+	gcd := new(big.Int)
+	a := new(big.Int)
+	b := new(big.Int)
+
+	gcd, a, b = AdvancedEuclidAlgorithm(x, y)
+
+	subTest := new(big.Int).Add(
+		new(big.Int).Mul(x, a),
+		new(big.Int).Mul(y, b),
+	)
+
+	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestAdvancedEuclidAlgorithm4(t *testing.T) {
+	x := big.NewInt(1)
+	y := big.NewInt(1)
+
+	want := big.NewInt(1)
+
+	//
+
+	gcd := new(big.Int)
+	a := new(big.Int)
+	b := new(big.Int)
+
+	gcd, a, b = AdvancedEuclidAlgorithm(x, y)
+
+	subTest := new(big.Int).Add(
+		new(big.Int).Mul(x, a),
+		new(big.Int).Mul(y, b),
+	)
+
+	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
+
+// Расширенный Алгоритм Евклида
+
+func TestEuclidAlgorithm1(t *testing.T) {
+	x := big.NewInt(13)
+	y := big.NewInt(17)
+
+	want := big.NewInt(1)
+
+	//
+
+	gcd := new(big.Int)
+
+	gcd = EuclidAlgorithm(x, y)
+
+	if want.Cmp(gcd) != 0 {
 		t.Fatal()
 	}
 }
@@ -42,17 +133,10 @@ func TestEuclidAlgorithm2(t *testing.T) {
 	//
 
 	gcd := new(big.Int)
-	a := new(big.Int)
-	b := new(big.Int)
 
-	gcd, a, b = EuclidAlgorithm(x, y)
+	gcd = EuclidAlgorithm(x, y)
 
-	subTest := new(big.Int).Add(
-		new(big.Int).Mul(x, a),
-		new(big.Int).Mul(y, b),
-	)
-
-	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+	if want.Cmp(gcd) != 0 {
 		t.Fatal()
 	}
 }
@@ -66,17 +150,10 @@ func TestEuclidAlgorithm3(t *testing.T) {
 	//
 
 	gcd := new(big.Int)
-	a := new(big.Int)
-	b := new(big.Int)
 
-	gcd, a, b = EuclidAlgorithm(x, y)
+	gcd = EuclidAlgorithm(x, y)
 
-	subTest := new(big.Int).Add(
-		new(big.Int).Mul(x, a),
-		new(big.Int).Mul(y, b),
-	)
-
-	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+	if want.Cmp(gcd) != 0 {
 		t.Fatal()
 	}
 }
@@ -90,17 +167,61 @@ func TestEuclidAlgorithm4(t *testing.T) {
 	//
 
 	gcd := new(big.Int)
-	a := new(big.Int)
-	b := new(big.Int)
 
-	gcd, a, b = EuclidAlgorithm(x, y)
+	gcd = EuclidAlgorithm(x, y)
 
-	subTest := new(big.Int).Add(
-		new(big.Int).Mul(x, a),
-		new(big.Int).Mul(y, b),
-	)
+	if want.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
 
-	if want.Cmp(gcd) != 0 || subTest.Cmp(gcd) != 0 {
+func TestEuclidAlgorithm5(t *testing.T) {
+	x := big.NewInt(0)
+	y := big.NewInt(7)
+
+	want := big.NewInt(7)
+
+	//
+
+	gcd := new(big.Int)
+
+	gcd = EuclidAlgorithm(x, y)
+
+	if want.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestEuclidAlgorithm6(t *testing.T) {
+	x := big.NewInt(7)
+	y := big.NewInt(0)
+
+	want := big.NewInt(7)
+
+	//
+
+	gcd := new(big.Int)
+
+	gcd = EuclidAlgorithm(x, y)
+
+	if want.Cmp(gcd) != 0 {
+		t.Fatal()
+	}
+}
+
+func TestEuclidAlgorithm8(t *testing.T) {
+	x := big.NewInt(0)
+	y := big.NewInt(0)
+
+	want := big.NewInt(0)
+
+	//
+
+	gcd := new(big.Int)
+
+	gcd = EuclidAlgorithm(x, y)
+
+	if want.Cmp(gcd) != 0 {
 		t.Fatal()
 	}
 }

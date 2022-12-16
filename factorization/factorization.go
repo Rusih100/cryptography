@@ -17,12 +17,12 @@ var (
 	constNum3 = big.NewInt(3)
 )
 
-// RoPollardFactorization - Ро-метод Полларда.
+// RoPollardFactor - Ро-метод Полларда.
 //
 // Вход: Число n, начальное значение c, функция fx (полином)
 //
 // Выход: Нетривиальный делитель числа p числа n
-func RoPollardFactorization(_n *big.Int, _c *big.Int, _fx *polynomial.Polynomial) *big.Int {
+func RoPollardFactor(_n *big.Int, _c *big.Int, _fx *polynomial.Polynomial) *big.Int {
 
 	// Копируем значения чтобы не менять значения по указателю
 	n := new(big.Int)
@@ -71,12 +71,12 @@ func RoPollardFactorization(_n *big.Int, _c *big.Int, _fx *polynomial.Polynomial
 	}
 }
 
-// RoOnePollardFactorization - (Po - 1)-метод Полларда.
+// RoOnePollardFactor - (Po - 1)-метод Полларда.
 //
 // Вход: Число n
 //
 // Выход: Нетривиальный делитель числа p числа n
-func RoOnePollardFactorization(_n *big.Int) *big.Int {
+func RoOnePollardFactor(_n *big.Int) *big.Int {
 
 	// Копируем значения чтобы не менять значения по указателю
 	n := new(big.Int)
@@ -85,6 +85,10 @@ func RoOnePollardFactorization(_n *big.Int) *big.Int {
 	// Проверка входных данных
 	if n.Sign() <= 0 {
 		panic("n > 0")
+	}
+
+	if n.Cmp(constNum3) <= 0 {
+		return nil
 	}
 
 	// Генерируем случайное число 2 ≤ a < n - 1:

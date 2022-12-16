@@ -10,11 +10,14 @@ func main() {
 
 	//console.Menu()
 
-	num := big.NewInt(2873)
+	num := big.NewInt(1024)
 
-	factor := new(big.Int)
+	for {
+		factor := new(big.Int)
 
-	factor = factorization.RoOnePollardFactorization(num)
-	fmt.Println(factor)
+		factor = factorization.RoOnePollardFactor(num)
+		fmt.Println(factor)
+
+	}
 
 }

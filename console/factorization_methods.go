@@ -74,20 +74,24 @@ func RoPollardFactorConsole() {
 
 		poly := polynomial.NewPolynomial(polyArr)
 
-		// Генерируем случайное число c
-		c, err := rand.Int(
-			rand.Reader,
-			new(big.Int).Sub(n, big.NewInt(2)),
-		)
-
-		if err != nil {
-			panic(err)
-		}
-		c = c.Add(c, big.NewInt(1))
-		//
-
 		factor := new(big.Int)
-		factor = factorization.RoPollardFactor(n, c, poly)
+
+		for i := 0; i < 100 && factor != nil; i++ {
+
+			// Генерируем случайное число c
+			c, err := rand.Int(
+				rand.Reader,
+				new(big.Int).Sub(n, big.NewInt(2)),
+			)
+
+			if err != nil {
+				panic(err)
+			}
+			c = c.Add(c, big.NewInt(1))
+			//
+
+			factor = factorization.RoPollardFactor(n, c, poly)
+		}
 
 		fmt.Println("Результат:")
 		if factor != nil {
@@ -136,7 +140,10 @@ func RoOnePollardFactorConsole() {
 		n.SetString(nString, 10)
 
 		factor := new(big.Int)
-		factor = factorization.RoOnePollardFactor(n)
+
+		for i := 0; i < 100 && factor != nil; i++ {
+			factor = factorization.RoOnePollardFactor(n)
+		}
 
 		fmt.Println("Результат:")
 		if factor != nil {

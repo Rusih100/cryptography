@@ -18,6 +18,7 @@ func Menu() {
 		" 6. Генерация k-битного простого числа\n" +
 		" 7. Решение сравнений\n" +
 		" 8. Построение конечных полей\n" +
+		" 9. Факторизация\n" +
 		"\n" +
 		"e - выход из программы\n"
 
@@ -58,6 +59,9 @@ func Menu() {
 				switchFlag = false
 			case "8":
 				GaloisFieldMenu()
+				switchFlag = false
+			case "9":
+				FactorizationMenu()
 				switchFlag = false
 
 			case "e":

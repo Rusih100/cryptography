@@ -10,7 +10,7 @@ func main() {
 
 	//console.Menu()
 
-	num := big.NewInt(1024)
+	num := big.NewInt(3)
 
 	for {
 		factor := new(big.Int)

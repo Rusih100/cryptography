@@ -753,7 +753,7 @@ func ModuloComparisonSecond(_a *big.Int, _p *big.Int) (xPos, xNeg *big.Int) {
 		}
 
 		// d == -1
-		if d.Cmp(big.NewInt(-1)) == 0 {
+		if d.Cmp(new(big.Int).Add(p, big.NewInt(-1))) == 0 {
 			j = big.NewInt(1)
 		}
 
@@ -782,6 +782,7 @@ func ModuloComparisonSecond(_a *big.Int, _p *big.Int) (xPos, xNeg *big.Int) {
 	)
 
 	xNeg.Neg(xNeg)
+	xNeg = xNeg.Mod(xNeg, p)
 
 	return xPos, xNeg
 }

@@ -881,11 +881,15 @@ func TestModuloComparisonSecond4(t *testing.T) {
 
 	x1, x2 = ModuloComparisonSecond(a, p)
 
-	res1 := new(big.Int).Mul(x1, x2)
+	res1 := new(big.Int).Mul(x1, x1)
 	res1 = res1.Sub(res1, a)
 	res1 = res1.Mod(res1, p)
 
-	if res1.Sign() != 0 {
+	res2 := new(big.Int).Mul(x2, x2)
+	res2 = res2.Sub(res2, a)
+	res2 = res2.Mod(res2, p)
+
+	if res1.Sign() != 0 || res2.Sign() != 0 {
 		t.Fatal()
 	}
 }
@@ -989,11 +993,15 @@ func TestModuloComparisonSecond10(t *testing.T) {
 
 	x1, x2 = ModuloComparisonSecond(a, p)
 
-	res1 := new(big.Int).Mul(x1, x2)
+	res1 := new(big.Int).Mul(x1, x1)
 	res1 = res1.Sub(res1, a)
 	res1 = res1.Mod(res1, p)
 
-	if res1.Sign() != 0 {
+	res2 := new(big.Int).Mul(x2, x2)
+	res2 = res2.Sub(res2, a)
+	res2 = res2.Mod(res2, p)
+
+	if res1.Sign() != 0 || res2.Sign() != 0 {
 		t.Fatal()
 	}
 }
@@ -1025,11 +1033,15 @@ func TestModuloComparisonSecond12(t *testing.T) {
 
 	x1, x2 = ModuloComparisonSecond(a, p)
 
-	res1 := new(big.Int).Mul(x1, x2)
+	res1 := new(big.Int).Mul(x1, x1)
 	res1 = res1.Sub(res1, a)
 	res1 = res1.Mod(res1, p)
 
-	if res1.Sign() != 0 {
+	res2 := new(big.Int).Mul(x2, x2)
+	res2 = res2.Sub(res2, a)
+	res2 = res2.Mod(res2, p)
+
+	if res1.Sign() != 0 || res2.Sign() != 0 {
 		t.Fatal()
 	}
 }

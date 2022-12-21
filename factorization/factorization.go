@@ -7,7 +7,9 @@ import (
 	bigFloat "github.com/ALTree/bigfloat"
 	"math"
 	"math/big"
+	rnd "math/rand"
 	"sort"
+	"time"
 )
 
 // Константы для упрощения кода
@@ -50,6 +52,17 @@ func RoPollardFactor(_n *big.Int, _c *big.Int, _fx *polynomial.Polynomial) *big.
 	a.Set(c)
 	b.Set(c)
 
+	// Засекание времени для отсечки
+	startTime := time.Now()
+	stopper := 0.0
+
+	// Размер отсчеки взависмости от размера числа
+	if n.BitLen() <= 64 {
+		stopper = 1
+	} else {
+		stopper = float64(n.BitLen() / 20)
+	}
+
 	for {
 		a = fx.Value(a)
 		a = a.Mod(a, n)
@@ -67,6 +80,10 @@ func RoPollardFactor(_n *big.Int, _c *big.Int, _fx *polynomial.Polynomial) *big.
 		}
 
 		if d.Cmp(n) == 0 {
+			return nil
+		}
+
+		if time.Since(startTime).Seconds() > stopper {
 			return nil
 		}
 	}
@@ -144,19 +161,82 @@ func RoOnePollardFactor(_n *big.Int) *big.Int {
 	return d
 }
 
-// PollardFactorization - Факторизация числа, методами RoPollardFactor и RoOnePollardFactor.
+// BruteForceFactorization - Факторизация числа перебором.
 //
-// Вход: Число n, steps - количество повторений каждого Ro-метода
+// Вход: Число n
 //
 // Выход: Массив различных делителей числа n
-func PollardFactorization(_n *big.Int, steps int) (result []*big.Int) {
+func BruteForceFactorization(_n *big.Int) (result []*big.Int) {
 
 	// Копируем значения, что бы не ихменять их по указателю
 	n := new(big.Int)
 	n.Set(_n)
 
+	factor := big.NewInt(2)
+
+	// Проверка на 2
+
+	if new(big.Int).Mod(n, factor).Sign() == 0 {
+		result = append(result, new(big.Int).Set(factor))
+	}
+
+	for new(big.Int).Mod(n, factor).Sign() == 0 {
+		n = n.Div(n, factor)
+	}
+
+	temp := new(big.Int)
+
+	// Цикл до корня из n, пропуская четные
+	for factor = big.NewInt(3); temp.Mul(factor, factor).Cmp(n) <= 0; factor = factor.Add(factor, constNum2) {
+
+		if new(big.Int).Mod(n, factor).Sign() == 0 {
+			result = append(result, new(big.Int).Set(factor))
+		}
+
+		for new(big.Int).Mod(n, factor).Sign() == 0 {
+			n.Div(n, factor)
+		}
+	}
+
+	if n.Cmp(constNum1) != 0 {
+		result = append(result, new(big.Int).Set(n))
+	}
+
+	return result
+}
+
+// Factorization - Факторизация числа смешанными методами.
+//
+// Вход: Число n
+//
+// Выход: Массив различных делителей числа n
+func Factorization(_n *big.Int) (result []*big.Int) {
+
+	// Копируем значения, что бы не ихменять их по указателю
+	n := new(big.Int)
+	n.Set(_n)
+
+	// Если число меньше 32 бит, перебираем все делители
+	if n.BitLen() <= 32 {
+		return BruteForceFactorization(n)
+	}
+
+	// Иначе методы Полларда
+
+	// Случайные числа
+	rnd.Seed(time.Now().UnixNano())
+
+	// Константа шагов
+	steps := 10
+
+	if n.BitLen() > 120 {
+		steps = n.BitLen() / 20
+	}
+
+	// Добавляем факторизумое число в массив
 	result = append(result, new(big.Int).Set(n))
 
+	// Переменная для записи делителя
 	factor := new(big.Int)
 
 	polyArr := []*big.Int{
@@ -169,64 +249,52 @@ func PollardFactorization(_n *big.Int, steps int) (result []*big.Int) {
 
 	for s := 0; s < steps; s++ {
 
+		// Итерация по элементам
 		for i := 0; i < len(result); i++ {
 
+			// Пропускаем числа <= 3
 			if result[i].Cmp(constNum3) <= 0 {
 				continue
 			}
 
-			// Генерируем случайное число c
-			c, err := rand.Int(
-				rand.Reader,
-				new(big.Int).Sub(result[i], constNum2),
-			)
+			// Случайно выбираем метод факторизации
+			choice := rnd.Int31n(2)
 
-			if err != nil {
-				panic(err)
-			}
-			c = c.Add(c, constNum1)
-			//
+			switch choice {
+			case 0:
+				// Ро метод
 
-			factor = RoPollardFactor(result[i], c, poly)
+				// Генерируем случайное число c
+				c, err := rand.Int(
+					rand.Reader,
+					new(big.Int).Sub(result[i], constNum2),
+				)
 
-			if factor != nil {
-				result[i].Set(new(big.Int).Div(result[i], factor))
-
-				result = append(result, new(big.Int).Set(factor))
-			}
-
-			// Проверка повторяющихся делителей
-
-			for k := 0; k < 0; k++ {
-				for new(big.Int).Mod(result[k], factor).Sign() == 0 {
-					result[k].Div(result[k], factor)
+				if err != nil {
+					panic(err)
 				}
-			}
-		}
-	}
+				c = c.Add(c, constNum1)
+				//
 
-	for s := 0; s < steps; s++ {
+				factor = RoPollardFactor(result[i], c, poly)
 
-		for i := 0; i < len(result); i++ {
-
-			if result[i].Cmp(constNum3) <= 0 {
-				continue
+			case 1:
+				// (Ро - 1) метод
+				factor = RoOnePollardFactor(result[i])
 			}
 
-			factor = RoOnePollardFactor(result[i])
-
+			// Если делитель найден
 			if factor != nil {
-				result[i].Set(new(big.Int).Div(result[i], factor))
 
-				result = append(result, new(big.Int).Set(factor))
-			}
-
-			// Проверка повторяющихся делителей
-
-			for k := 0; k < 0; k++ {
-				for new(big.Int).Mod(result[k], factor).Sign() == 0 {
-					result[k].Div(result[k], factor)
+				// Проходимся по всем элементам и убираем повторы
+				for k := 0; k < len(result); k++ {
+					for new(big.Int).Mod(result[k], factor).Sign() == 0 {
+						result[k].Div(result[k], factor)
+					}
 				}
+
+				// Добавляем делитель в конец
+				result = append(result, new(big.Int).Set(factor))
 			}
 		}
 	}
@@ -236,42 +304,33 @@ func PollardFactorization(_n *big.Int, steps int) (result []*big.Int) {
 		return result[i].Cmp(result[j]) < 0
 	})
 
-	// TODO: Убрать повторы
-
-	return result
-}
-
-// BruteForceFactorization - Факторизация числа перебором.
-//
-// Вход: Число n
-//
-// Выход: Массив различных делителей числа n
-func BruteForceFactorization(_n *big.Int) (result []*big.Int) {
-
-	// Копируем значения, что бы не ихменять их по указателю
-	n := new(big.Int)
-	n.Set(_n)
-
-	sqrtFloatN := new(big.Float)
-	sqrtFloatN.SetInt(n)
-
-	sqrtFloatN = bigFloat.Sqrt(sqrtFloatN)
-
-	sqrtIntN := new(big.Int)
-	sqrtIntN, _ = sqrtFloatN.Int(sqrtIntN)
-	sqrtIntN = sqrtIntN.Add(sqrtIntN, constNum1)
-
-	// Цикл до корня из n
-	for factor := big.NewInt(2); factor.Cmp(sqrtIntN) <= 0; factor = factor.Add(factor, constNum1) {
-
-		if new(big.Int).Mod(n, factor).Sign() == 0 {
-			result = append(result, new(big.Int).Set(factor))
-		}
-
-		for new(big.Int).Mod(n, factor).Sign() == 0 {
-			n.Div(n, factor)
-		}
+	// Удаление 1
+	for result[0].Cmp(constNum1) == 0 {
+		result = result[1:]
 	}
 
+	// Проверка тестом простоты
+	for m := 0; m < len(result); m++ {
+		if !crypto_math.MillerRabinTest(result[m]) && result[m].BitLen() <= 128 {
+
+			// Уход в рекурсию
+			temp := []*big.Int{}
+			temp = Factorization(result[m])
+			result = append(result, temp...)
+
+			// Сортируем массив
+			sort.Slice(result, func(i, j int) bool {
+				return result[i].Cmp(result[j]) < 0
+			})
+
+			// Убираем повторы
+			for i := 1; i < len(result); i++ {
+				if result[i-1].Cmp(result[i]) == 0 {
+					result = append(result[:i], result[i+1:]...)
+					i--
+				}
+			}
+		}
+	}
 	return result
 }

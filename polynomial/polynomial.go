@@ -46,6 +46,12 @@ func (c *Polynomial) Set(coefficients []*big.Int) *Polynomial {
 	return c
 }
 
+// Get - Получения коэфицента i-той степени
+func (c *Polynomial) Get(i int) *big.Int {
+	result := big.NewInt(0)
+	return result.Set(c.coefficients[i])
+}
+
 // SetPolynomial - Задает массив коэфицентов, относительно другого полинома
 func (c *Polynomial) SetPolynomial(p *Polynomial) *Polynomial {
 

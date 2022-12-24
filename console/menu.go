@@ -19,6 +19,7 @@ func Menu() {
 		" 7. Решение сравнений\n" +
 		" 8. Построение конечных полей\n" +
 		" 9. Факторизация\n" +
+		"10. Дискретное логарифмирование\n" +
 		"\n" +
 		"e - выход из программы\n"
 
@@ -62,6 +63,9 @@ func Menu() {
 				switchFlag = false
 			case "9":
 				FactorizationMenu()
+				switchFlag = false
+			case "10":
+				DiscreteLogarithmConsole()
 				switchFlag = false
 
 			case "e":

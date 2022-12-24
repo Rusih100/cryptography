@@ -3,7 +3,6 @@ package discrete_logarithm
 import (
 	"cryptography/crypto_math"
 	"cryptography/polynomial"
-	"fmt"
 	"math/big"
 )
 
@@ -61,7 +60,6 @@ func NumberOrder(_a *big.Int, _mod *big.Int) *big.Int {
 			temp = temp.Mod(temp, mod)
 
 			if temp.Sign() == 0 {
-				fmt.Println(factor)
 				result.Set(factor)
 				break
 			}
@@ -198,7 +196,6 @@ func DiscreteLogarithm(_a *big.Int, _b *big.Int, _p *big.Int) *big.Int {
 	x := new(big.Int)
 	offset := new(big.Int)
 
-	fmt.Println(crypto_math.ModuloComparisonFirst(item1, item0, r))
 	count, x, offset = crypto_math.ModuloComparisonFirst(item1, item0, r)
 
 	if count.Sign() == 0 {

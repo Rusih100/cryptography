@@ -1,9 +1,8 @@
 package main
 
 import (
-	"cryptography/discrete_logarithm"
+	"cryptography/console"
 	"fmt"
-	"math/big"
 	"time"
 )
 
@@ -17,11 +16,6 @@ func timer(name string) func() {
 func main() {
 	defer timer("main")()
 
-	//console.Menu()
+	console.Menu()
 
-	a := big.NewInt(14)
-	b := big.NewInt(64)
-	m := big.NewInt(107)
-
-	fmt.Println(discrete_logarithm.DiscreteLogarithm(a, b, m))
 }

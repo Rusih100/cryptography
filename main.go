@@ -19,7 +19,7 @@ func main() {
 
 	//console.Menu()
 
-	a := big.NewInt(11)
+	a := big.NewInt(14)
 	b := big.NewInt(64)
 	m := big.NewInt(107)
 

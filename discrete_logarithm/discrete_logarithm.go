@@ -2,8 +2,8 @@ package discrete_logarithm
 
 import (
 	"cryptography/crypto_math"
-	"cryptography/factorization"
 	"cryptography/polynomial"
+	"fmt"
 	"math/big"
 )
 
@@ -46,25 +46,26 @@ func NumberOrder(_a *big.Int, _mod *big.Int) *big.Int {
 	// Нахождение функции Эйлера
 	phi := new(big.Int).Sub(mod, constNum1)
 
-	// Нахождение всех делителей phi
-	factors := []*big.Int{}
-
-	factors = factorization.Factorization(phi)
-
 	// Поиск порядка
 	result := big.NewInt(0)
 
 	temp := new(big.Int)
 
-	for i := 0; i < len(factors); i++ {
+	// Перебор всех делителей
+	for factor := big.NewInt(1); factor.Cmp(phi) <= 0; factor.Add(factor, constNum1) {
 
-		temp = crypto_math.Pow(a, factors[i])
-		temp = temp.Sub(temp, constNum1)
-		temp = temp.Mod(temp, mod)
+		if new(big.Int).Mod(phi, factor).Sign() == 0 {
 
-		if temp.Sign() == 0 {
-			result.Set(factors[i])
-			break
+			temp = crypto_math.Pow(a, factor)
+			temp = temp.Sub(temp, constNum1)
+			temp = temp.Mod(temp, mod)
+
+			if temp.Sign() == 0 {
+				fmt.Println(factor)
+				result.Set(factor)
+				break
+			}
+
 		}
 	}
 
@@ -184,8 +185,6 @@ func DiscreteLogarithm(_a *big.Int, _b *big.Int, _p *big.Int) *big.Int {
 	logC = logC.Sub(logD, logC)
 	logC = logC.Mod(logC, r)
 
-	x := new(big.Int)
-
 	item0 := new(big.Int)
 	item1 := new(big.Int)
 
@@ -195,7 +194,24 @@ func DiscreteLogarithm(_a *big.Int, _b *big.Int, _p *big.Int) *big.Int {
 	item0 = item0.Neg(item0)
 	item0 = item0.Mod(item0, r)
 
-	_, x, _ = crypto_math.ModuloComparisonFirst(item1, item0, r)
+	count := new(big.Int)
+	x := new(big.Int)
+	offset := new(big.Int)
+
+	fmt.Println(crypto_math.ModuloComparisonFirst(item1, item0, r))
+	count, x, offset = crypto_math.ModuloComparisonFirst(item1, item0, r)
+
+	if count.Sign() == 0 {
+		return nil
+	}
+
+	if x.Sign() == 0 && offset == nil {
+		return nil
+	}
+
+	if x.Sign() == 0 && offset != nil {
+		return new(big.Int).Add(x, offset)
+	}
 
 	return x
 }

@@ -75,7 +75,23 @@ func ToBlocks(_byteArray []byte, blockSizeBits uint) []*big.Int {
 
 // ToBytes - Преобразует массив big.Int в массив байт
 func ToBytes(blocksArray []*big.Int) []byte {
-	return nil
 
-	// TODO
+	byteArray := []byte{}
+
+	// Преобразуем числа в байты
+	for i := 0; i < len(blocksArray); i++ {
+
+		temp := blocksArray[i].Bytes()
+		byteArray = append(byteArray, temp...)
+	}
+
+	// Убираем падинг
+
+	// Получаем последний байт
+	lastByte := byteArray[len(byteArray)-1]
+	lastByteValue := int(lastByte)
+
+	byteArray = byteArray[:len(byteArray)-lastByteValue]
+
+	return byteArray
 }

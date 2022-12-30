@@ -35,9 +35,13 @@ func main() {
 	res = ciphers.ToBlocks(messageBytes, 512)
 	fmt.Println(res)
 
-	for i := 0; i < len(res); i++ {
-		fmt.Println(len(res[i].Bytes()), res[i].Bytes())
+	//for i := 0; i < len(res); i++ {
+	//	fmt.Println(len(res[i].Bytes()), res[i].Bytes())
+	//}
 
-	}
+	b := ciphers.ToBytes(res)
+	fmt.Println(b)
+
+	fmt.Println(string(b))
 
 }

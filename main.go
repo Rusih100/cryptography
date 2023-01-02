@@ -21,9 +21,14 @@ func main() {
 
 	cipherRSA := new(ciphers.RSA)
 
-	cipherRSA.GenerateKey(512)
+	//cipherRSA.GenerateKey(512)
 
-	cipherRSA.SaveKeys()
+	//cipherRSA.SaveKeys()
+
+	cipherRSA.LoadKeys(
+		"ciphers/RSA/PublicKey_160849.json",
+		"ciphers/RSA/PrivateKey_ 160849.json",
+	)
 
 	//n := big.NewInt(131232)
 	//d := big.NewInt(3434343434)

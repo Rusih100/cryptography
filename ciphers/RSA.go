@@ -156,3 +156,23 @@ func (rsa *RSA) SaveKeys() {
 		panic(err)
 	}
 }
+
+// LoadKeys - загружает ключи из JSON файлов и задает их в структуру RSA
+func (rsa *RSA) LoadKeys(publicKeyPath string, privateKeyPath string) *RSA {
+
+	// Публичный ключ
+	publicKey, err := os.ReadFile(publicKeyPath)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(publicKey, &rsa.publicKey)
+
+	// Приватный ключ
+	privateKey, err := os.ReadFile(privateKeyPath)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(privateKey, &rsa.privateKey)
+
+	return rsa
+}

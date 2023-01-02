@@ -3,7 +3,6 @@ package main
 import (
 	"cryptography/ciphers"
 	"fmt"
-	"math/big"
 	"time"
 )
 
@@ -20,28 +19,16 @@ func main() {
 
 	//console.Menu()
 
-	message := "Молчи. Смотри на звёзды и цени то, что ты живёшь."
-	fmt.Println()
-	fmt.Println(message)
-	fmt.Println()
+	cipherRSA := new(ciphers.RSA)
 
-	messageBytes := []byte(message)
-	fmt.Println("Длина в байтах - ", len(messageBytes))
-	fmt.Println(messageBytes)
-	fmt.Println("--------------")
+	cipherRSA.GenerateKey(512)
 
-	res := []*big.Int{}
+	cipherRSA.SaveKeys()
 
-	res = ciphers.ToBlocks(messageBytes, 512)
-	fmt.Println(res)
-
-	//for i := 0; i < len(res); i++ {
-	//	fmt.Println(len(res[i].Bytes()), res[i].Bytes())
-	//}
-
-	b := ciphers.ToBytes(res)
-	fmt.Println(b)
-
-	fmt.Println(string(b))
+	//n := big.NewInt(131232)
+	//d := big.NewInt(3434343434)
+	//
+	//k := ciphers.PublicKeyRSA{d, n}
+	//fmt.Println(k)
 
 }

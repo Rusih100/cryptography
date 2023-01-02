@@ -569,6 +569,8 @@ func InverseElement(_a *big.Int, _mod *big.Int) (result *big.Int) {
 
 	_, _, result = AdvancedEuclidAlgorithm(mod, a)
 
+	result = result.Mod(result, mod)
+
 	return result
 }
 

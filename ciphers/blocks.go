@@ -6,8 +6,10 @@ import (
 
 // Пакет для разбития набора байт на блоки
 
-// ToBlocks - Разбивает набор байт на блоки, дополняняя недостающие октеты, возвращает массив big.Int
-func ToBlocks(_byteArray []byte, blockSizeBits uint) []*big.Int {
+const blockSizeBits uint = 2048
+
+// ToBlocks - Разбивает набор незашифрованных байт на блоки, дополняняя недостающие октеты, возвращает массив незашифрованных big.Int
+func ToBlocks(_byteArray []byte) []*big.Int {
 
 	// Размер массива байт
 	byteArraySize := len(_byteArray)
@@ -73,7 +75,7 @@ func ToBlocks(_byteArray []byte, blockSizeBits uint) []*big.Int {
 	return result
 }
 
-// ToBytes - Преобразует массив big.Int в массив байт
+// ToBytes - Преобразует массив незашифрованных big.Int в массив незашифрованных байт
 func ToBytes(blocksArray []*big.Int) []byte {
 
 	byteArray := []byte{}
@@ -91,7 +93,65 @@ func ToBytes(blocksArray []*big.Int) []byte {
 	lastByte := byteArray[len(byteArray)-1]
 	lastByteValue := int(lastByte)
 
-	byteArray = byteArray[:len(byteArray)-lastByteValue]
+	if lastByteValue < len(byteArray) {
+		byteArray = byteArray[:len(byteArray)-lastByteValue]
+	}
 
 	return byteArray
+}
+
+// ToCipherBytes - Преобразует массив зашифрованных big.Int в массив зашифрованных байт
+func ToCipherBytes(blocksArray []*big.Int) []byte {
+
+	byteArray := []byte{}
+
+	// Преобразуем числа в байты
+	for i := 0; i < len(blocksArray); i++ {
+
+		temp := blocksArray[i].Bytes()
+
+		// Количество дополняемых незначащих нулей слева
+
+		count := (int(blockSizeBits) / 8) - len(temp)
+
+		for j := 0; j < count; j++ {
+			byteArray = append(byteArray, byte(0))
+		}
+
+		byteArray = append(byteArray, temp...)
+	}
+
+	return byteArray
+}
+
+// ToCipherBlocks - Разбивает набор зашифрованных байт на блоки, возвращает массив зашифрованных big.Int
+func ToCipherBlocks(_byteArray []byte) []*big.Int {
+
+	// Размер массива байт
+	byteArraySize := len(_byteArray)
+
+	// Копируем массив байт, чтобы не изменять его
+	byteArray := make([]byte, byteArraySize)
+	copy(byteArray, _byteArray)
+
+	// Размер блока в байтах
+	blockSize := int(blockSizeBits) / 8
+
+	// Количество цельных блоков
+	blockCount := byteArraySize / blockSize
+
+	result := []*big.Int{}
+	tempBytes := []byte{}
+
+	// Добавляем цельные блоки
+	for i := 0; i < blockCount; i++ {
+
+		// Срез байтов
+		tempBytes = byteArray[i*blockSize : (i+1)*blockSize]
+
+		// Добавляем в массив число
+		result = append(result, new(big.Int).SetBytes(tempBytes))
+	}
+
+	return result
 }

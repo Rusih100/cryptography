@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"cryptography/crypto_math"
 	"encoding/json"
+	"fmt"
 	"math/big"
 	"os"
 	"time"
@@ -148,7 +149,7 @@ func (rsa *RSA) SaveKeys() {
 		panic(err)
 	}
 
-	privateKeyName := "ciphers/RSA/PrivateKey_ " + date + ".json"
+	privateKeyName := "ciphers/RSA/PrivateKey_" + date + ".json"
 	privateKeyFile, err := os.Create(privateKeyName)
 
 	_, err = privateKeyFile.Write(privateKeyJSON)
@@ -161,18 +162,102 @@ func (rsa *RSA) SaveKeys() {
 func (rsa *RSA) LoadKeys(publicKeyPath string, privateKeyPath string) *RSA {
 
 	// Публичный ключ
-	publicKey, err := os.ReadFile(publicKeyPath)
-	if err != nil {
-		panic(err)
+	if publicKeyPath != "" {
+
+		publicKey, err := os.ReadFile(publicKeyPath)
+		if err != nil {
+			panic(err)
+		}
+		err = json.Unmarshal(publicKey, &rsa.publicKey)
 	}
-	err = json.Unmarshal(publicKey, &rsa.publicKey)
 
 	// Приватный ключ
-	privateKey, err := os.ReadFile(privateKeyPath)
-	if err != nil {
-		panic(err)
+	if privateKeyPath != "" {
+
+		privateKey, err := os.ReadFile(privateKeyPath)
+		if err != nil {
+			panic(err)
+		}
+		err = json.Unmarshal(privateKey, &rsa.privateKey)
 	}
-	err = json.Unmarshal(privateKey, &rsa.privateKey)
 
 	return rsa
+}
+
+// Encrypt - Шифрует последовательность байт
+func (rsa *RSA) Encrypt(message []byte) []byte {
+
+	if rsa.publicKey == nil {
+		panic("No public key specified")
+	}
+
+	// Бьем сообщение на блоки
+	messageBlocks := []*big.Int{}
+	messageBlocks = ToBlocks(message)
+	fmt.Println(messageBlocks)
+
+	// Загружаем ключ
+	e := new(big.Int)
+	n := new(big.Int)
+
+	e.Set(rsa.publicKey.PublicExponent)
+	n.Set(rsa.publicKey.N)
+
+	cipherBlocks := []*big.Int{}
+	temp := new(big.Int)
+
+	// Шифруем
+	for i := 0; i < len(messageBlocks); i++ {
+		temp.Set(messageBlocks[i])
+
+		temp = crypto_math.PowMod(temp, e, n)
+		cipherBlocks = append(cipherBlocks, new(big.Int).Set(temp))
+	}
+
+	// Переводим блоки в байты
+	result := []byte{}
+
+	result = ToCipherBytes(cipherBlocks)
+
+	return result
+}
+
+// Decrypt - Расшифровывает последовательность байт
+func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
+
+	if rsa.privateKey == nil {
+		panic("No private key specified")
+	}
+
+	// Бьем сообщение на блоки
+	cipherBlocks := []*big.Int{}
+	cipherBlocks = ToCipherBlocks(ciphertext)
+
+	// Загружаем ключ
+	n := new(big.Int).Mul(
+		rsa.privateKey.Prime1,
+		rsa.privateKey.Prime2,
+	)
+
+	d := new(big.Int)
+	d.Set(rsa.privateKey.PrivateExponent)
+
+	messageBlocks := []*big.Int{}
+	temp := new(big.Int)
+
+	// Расшифровываем
+	for i := 0; i < len(cipherBlocks); i++ {
+		temp.Set(cipherBlocks[i])
+
+		temp = crypto_math.PowMod(temp, d, n)
+		messageBlocks = append(messageBlocks, new(big.Int).Set(temp))
+	}
+	fmt.Println(messageBlocks)
+	// Переводим блоки в байты
+	result := []byte{}
+
+	result = ToBytes(messageBlocks)
+
+	return result
+
 }

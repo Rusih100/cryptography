@@ -21,19 +21,18 @@ func main() {
 
 	cipherRSA := new(ciphers.RSA)
 
-	//cipherRSA.GenerateKey(512)
+	cipherRSA.GenerateKey(265)
 
 	//cipherRSA.SaveKeys()
 
-	cipherRSA.LoadKeys(
-		"ciphers/RSA/PublicKey_160849.json",
-		"ciphers/RSA/PrivateKey_ 160849.json",
-	)
+	message := "Если вы найдете человека с которым сможете себя вести также свободно, " +
+		"как ведете себя наедине с собой, то цените его как воздух."
 
-	//n := big.NewInt(131232)
-	//d := big.NewInt(3434343434)
-	//
-	//k := ciphers.PublicKeyRSA{d, n}
-	//fmt.Println(k)
+	messageBytes := []byte(message)
+
+	cipherText := cipherRSA.Encrypt(messageBytes)
+
+	res := cipherRSA.Decrypt(cipherText)
+	fmt.Println(len(res))
 
 }

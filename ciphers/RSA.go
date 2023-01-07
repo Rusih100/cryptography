@@ -1,10 +1,8 @@
 package ciphers
 
 import (
-	"crypto/rand"
 	"cryptography/crypto_math"
 	"encoding/json"
-	"fmt"
 	"math/big"
 	"os"
 	"time"
@@ -62,6 +60,8 @@ type RSA struct {
 // GenerateKey - Генерирует PublicKeyRSA и PrivateKeyRSA и задает их в структуру RSA
 func (rsa *RSA) GenerateKey(k int) *RSA {
 
+	const iter = 150
+
 	// Проверка входных данных
 	if k <= 1 {
 		panic("k > 1")
@@ -69,53 +69,48 @@ func (rsa *RSA) GenerateKey(k int) *RSA {
 
 	p := new(big.Int)
 	q := new(big.Int)
+	n := new(big.Int)
+	phi := new(big.Int)
 
-	// Генерация случайных p и q
-	p = crypto_math.SimpleNumber(k, 100)
-	q = crypto_math.SimpleNumber(k, 100)
+	e := new(big.Int)
+	d := new(big.Int)
 
-	// Случай одинаковых p и q
+	// Генерация
+
+	p = crypto_math.SimpleNumber(k, iter)
+	q = crypto_math.SimpleNumber(k, iter)
+
+	// Если p и q равны генерируем новое q
 	for p.Cmp(q) == 0 {
-		q = crypto_math.SimpleNumber(k, 100)
+		q = crypto_math.SimpleNumber(k, iter)
 	}
 
-	n := new(big.Int).Mul(p, q)
-
-	phi := new(big.Int).Mul(
+	n = n.Mul(p, q)
+	phi = phi.Mul(
 		new(big.Int).Sub(p, constNum1),
 		new(big.Int).Sub(q, constNum1),
 	)
 
-	e := big.NewInt(0)
+	// Выбираем e
+
+	// Выбираем открытую экспоненту
+	e = crypto_math.SimpleNumber(k/8, iter)
 
 	for {
-		// Выбираем открытую экспоненту
-		exp, err := rand.Int(
-			rand.Reader,
-			new(big.Int).Sub(phi, constNum1),
-		)
-		if err != nil {
-			panic(err)
-		}
-		exp = exp.Add(exp, constNum1)
-		//
+		d = crypto_math.InverseElement(e, phi)
 
 		gcd := new(big.Int)
-		gcd = crypto_math.EuclidAlgorithm(exp, phi)
+		gcd = crypto_math.EuclidAlgorithm(e, phi)
 
-		if gcd.Cmp(constNum1) == 1 {
-			e.Set(exp)
+		if gcd.Cmp(constNum1) == 0 && new(big.Int).Mod(new(big.Int).Mul(e, d), phi).Cmp(constNum1) == 0 {
 			break
 		}
+		e = e.Add(e, constNum1)
 	}
-
-	d := new(big.Int)
-
-	d = crypto_math.InverseElement(e, phi)
 
 	// Устанавливаем ключи
 
-	rsa.publicKey = NewPublicKeyRSA(n, e)
+	rsa.publicKey = NewPublicKeyRSA(e, n)
 	rsa.privateKey = NewPrivateKeyRSA(d, p, q)
 
 	return rsa
@@ -191,17 +186,18 @@ func (rsa *RSA) Encrypt(message []byte) []byte {
 		panic("No public key specified")
 	}
 
-	// Бьем сообщение на блоки
-	messageBlocks := []*big.Int{}
-	messageBlocks = ToBlocks(message)
-	fmt.Println(messageBlocks)
-
 	// Загружаем ключ
 	e := new(big.Int)
 	n := new(big.Int)
 
 	e.Set(rsa.publicKey.PublicExponent)
 	n.Set(rsa.publicKey.N)
+
+	// Размер блока для шифррования
+	blockSize := len(n.Bytes()) - 1
+
+	// Бьем сообщение на блоки
+	messageBlocks := ToBlocks(message, blockSize)
 
 	cipherBlocks := []*big.Int{}
 	temp := new(big.Int)
@@ -215,9 +211,7 @@ func (rsa *RSA) Encrypt(message []byte) []byte {
 	}
 
 	// Переводим блоки в байты
-	result := []byte{}
-
-	result = ToCipherBytes(cipherBlocks)
+	result := ToCipherBytes(cipherBlocks, blockSize)
 
 	return result
 }
@@ -229,10 +223,6 @@ func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
 		panic("No private key specified")
 	}
 
-	// Бьем сообщение на блоки
-	cipherBlocks := []*big.Int{}
-	cipherBlocks = ToCipherBlocks(ciphertext)
-
 	// Загружаем ключ
 	n := new(big.Int).Mul(
 		rsa.privateKey.Prime1,
@@ -241,6 +231,12 @@ func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
 
 	d := new(big.Int)
 	d.Set(rsa.privateKey.PrivateExponent)
+
+	// Размер блока для шифррования
+	blockSize := len(n.Bytes())
+
+	// Бьем сообщение на блоки
+	cipherBlocks := ToCipherBlocks(ciphertext, blockSize)
 
 	messageBlocks := []*big.Int{}
 	temp := new(big.Int)
@@ -252,12 +248,9 @@ func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
 		temp = crypto_math.PowMod(temp, d, n)
 		messageBlocks = append(messageBlocks, new(big.Int).Set(temp))
 	}
-	fmt.Println(messageBlocks)
-	// Переводим блоки в байты
-	result := []byte{}
 
-	result = ToBytes(messageBlocks)
+	// Переводим блоки в байты
+	result := ToBytes(messageBlocks)
 
 	return result
-
 }

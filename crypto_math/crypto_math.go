@@ -418,6 +418,7 @@ func MillerRabinTest(_n *big.Int) bool {
 	n := new(big.Int)
 	n.Set(_n)
 
+	// Проверка на четность
 	if n.Bit(0) == 0 && n.Cmp(constNum2) != 0 {
 		return false
 	}
@@ -432,49 +433,56 @@ func MillerRabinTest(_n *big.Int) bool {
 		panic("n > 1")
 	}
 
+	// Представления числа
+
 	// n - 1
-	r := new(big.Int).Sub(n, constNum1)
+	t := new(big.Int).Sub(n, constNum1)
 
 	s := big.NewInt(0)
-	for r.Bit(0) == 0 {
+	for t.Bit(0) == 0 {
 		s = s.Add(s, constNum1)
-		r = r.Rsh(r, 1)
+		t = t.Rsh(t, 1)
 	}
 
-	// Генерируем случайное число 2 ≤ a < n - 1:
-	// 0 ≤ a < n - 3	| +2
-	a, err := rand.Int(
-		rand.Reader,
-		new(big.Int).Sub(n, constNum3),
-	)
-	if err != nil {
-		panic(err)
-	}
-	a = a.Add(a, constNum2)
-	//
+	// Количество раундов теста
+	const k = 20
+	x := new(big.Int)
 
-	y := new(big.Int)
-	y = PowMod(a, r, n)
+	for i := 0; i < k; i++ {
 
-	// y != 1 и y != n - 1
-	if y.Cmp(constNum1) != 0 && y.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
-		j := big.NewInt(1)
+		// Генерируем случайное число 2 ≤ a < n - 1:
+		// 0 ≤ a < n - 3	| +2
+		a, err := rand.Int(
+			rand.Reader,
+			new(big.Int).Sub(n, constNum3),
+		)
+		if err != nil {
+			panic(err)
+		}
+		a = a.Add(a, constNum2)
+		//
 
-		// s - 1 >= j и y != n -1
-		for new(big.Int).Sub(s, constNum1).Cmp(j) >= 0 && y.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
-			y = PowMod(y, constNum2, n)
-			// y == 1
-			if y.Cmp(constNum1) == 0 {
+		x = PowMod(a, t, n)
+
+		if x.Cmp(constNum1) == 0 || x.Cmp(new(big.Int).Sub(n, constNum1)) == 0 {
+			continue
+		}
+
+		for j := big.NewInt(0); j.Cmp(new(big.Int).Sub(s, constNum1)) < 0; j.Add(j, constNum1) {
+
+			x = PowMod(x, constNum2, n)
+
+			if x.Cmp(constNum1) == 0 {
 				return false
 			}
-			j = j.Add(j, constNum1)
+			if x.Cmp(new(big.Int).Sub(n, constNum1)) == 0 {
+				break
+			}
 		}
 
-		// y != n - 1
-		if y.Cmp(new(big.Int).Sub(n, constNum1)) != 0 {
-			return false
-		}
+		return false
 	}
+
 	return true
 }
 
@@ -533,7 +541,7 @@ func SimpleNumber(k int, t int) (result *big.Int) {
 
 	for i := 0; i < t; i++ {
 		if !MillerRabinTest(randNumber) {
-			randNumber = RandNumber(k)
+			randNumber = randNumber.Add(randNumber, constNum1)
 			i = 0
 		}
 	}

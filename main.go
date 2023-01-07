@@ -2,6 +2,7 @@ package main
 
 import (
 	"cryptography/ciphers"
+	"encoding/hex"
 	"fmt"
 	"time"
 )
@@ -21,18 +22,26 @@ func main() {
 
 	cipherRSA := new(ciphers.RSA)
 
-	cipherRSA.GenerateKey(265)
-
+	cipherRSA.GenerateKey(512)
 	//cipherRSA.SaveKeys()
+
+	//cipherRSA.LoadKeys(
+	//	"ciphers/RSA/PublicKey_210447.json",
+	//	"ciphers/RSA/PrivateKey_210447.json",
+	//)
 
 	message := "Если вы найдете человека с которым сможете себя вести также свободно, " +
 		"как ведете себя наедине с собой, то цените его как воздух."
 
 	messageBytes := []byte(message)
 
-	cipherText := cipherRSA.Encrypt(messageBytes)
+	cipherMessage := cipherRSA.Encrypt(messageBytes)
 
-	res := cipherRSA.Decrypt(cipherText)
-	fmt.Println(len(res))
+	fmt.Println("Зашифрованное сообщение:")
+	fmt.Println(hex.EncodeToString(cipherMessage))
+	fmt.Println("---")
+	fmt.Println("Расшифрованное сообщение:")
+	result := cipherRSA.Decrypt(cipherMessage)
+	fmt.Println(string(result))
 
 }

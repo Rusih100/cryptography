@@ -2,6 +2,7 @@ package main
 
 import (
 	"cryptography/ciphers"
+	"cryptography/console"
 	"encoding/hex"
 	"fmt"
 	"time"
@@ -18,7 +19,7 @@ func timer(name string) func() {
 func main() {
 	defer timer("main")()
 
-	//console.Menu()
+	console.Menu()
 
 	cipherRSA := new(ciphers.RSA)
 

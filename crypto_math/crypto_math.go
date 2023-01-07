@@ -450,6 +450,8 @@ func MillerRabinTest(_n *big.Int) bool {
 
 	for i := 0; i < k; i++ {
 
+		nextIter := false
+
 		// Генерируем случайное число 2 ≤ a < n - 1:
 		// 0 ≤ a < n - 3	| +2
 		a, err := rand.Int(
@@ -476,8 +478,13 @@ func MillerRabinTest(_n *big.Int) bool {
 				return false
 			}
 			if x.Cmp(new(big.Int).Sub(n, constNum1)) == 0 {
+				nextIter = true
 				break
 			}
+		}
+
+		if nextIter {
+			continue
 		}
 
 		return false

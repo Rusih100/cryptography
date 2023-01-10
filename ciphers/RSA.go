@@ -211,7 +211,7 @@ func (rsa *RSA) Encrypt(message []byte) []byte {
 	}
 
 	// Переводим блоки в байты
-	result := ToCipherBytes(cipherBlocks, blockSize)
+	result := ToCipherBytes(cipherBlocks, blockSize+1)
 
 	return result
 }

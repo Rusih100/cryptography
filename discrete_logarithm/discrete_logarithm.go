@@ -202,13 +202,21 @@ func DiscreteLogarithm(_a *big.Int, _b *big.Int, _p *big.Int) *big.Int {
 		return nil
 	}
 
-	if x.Sign() == 0 && offset == nil {
-		return nil
+	res := new(big.Int)
+
+	for i := big.NewInt(0); i.Cmp(count) < 0; i.Add(i, constNum1) {
+
+		res = crypto_math.PowMod(a, x, p)
+		res = res.Mod(res.Sub(res, b), p)
+
+		if res.Sign() == 0 {
+			return x
+		}
+
+		if offset != nil {
+			x.Add(x, offset)
+		}
 	}
 
-	if x.Sign() == 0 && offset != nil {
-		return new(big.Int).Add(x, offset)
-	}
-
-	return x
+	return nil
 }

@@ -3,7 +3,6 @@ package main
 import (
 	"cryptography/ciphers"
 	"cryptography/console"
-	"encoding/hex"
 	"fmt"
 	"time"
 )
@@ -21,9 +20,9 @@ func main() {
 
 	console.Menu()
 
-	cipherRSA := new(ciphers.RSA)
+	//cipherRSA := new(ciphers.RSA)
 
-	cipherRSA.GenerateKey(512)
+	//cipherRSA.GenerateKey(512)
 	//cipherRSA.SaveKeys()
 
 	//cipherRSA.LoadKeys(
@@ -35,14 +34,28 @@ func main() {
 		"как ведете себя наедине с собой, то цените его как воздух."
 
 	messageBytes := []byte(message)
+	fmt.Println(len(messageBytes))
 
-	cipherMessage := cipherRSA.Encrypt(messageBytes)
+	//fmt.Println(messageBytes)
 
-	fmt.Println("Зашифрованное сообщение:")
-	fmt.Println(hex.EncodeToString(cipherMessage))
-	fmt.Println("---")
-	fmt.Println("Расшифрованное сообщение:")
-	result := cipherRSA.Decrypt(cipherMessage)
-	fmt.Println(string(result))
+	bl := ciphers.ToBlocks(messageBytes, 64)
+
+	for _, i := range bl {
+		//fmt.Println(hex.EncodeToString(i.Bytes()))
+		fmt.Println(i.Bytes())
+	}
+
+	fmt.Println(string(ciphers.ToBytes(bl)))
+
+	//cipherMessage := cipherRSA.Encrypt(messageBytes)
+	//
+	//fmt.Println("Зашифрованное сообщение:")
+	//fmt.Println(hex.EncodeToString(cipherMessage))
+	//fmt.Println("---")
+	//
+	//fmt.Println("Расшифрованное сообщение:")
+	//result := cipherRSA.Decrypt(cipherMessage)
+	//
+	//fmt.Println(string(result))
 
 }

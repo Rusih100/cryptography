@@ -15,47 +15,37 @@ func timer(name string) func() {
 	}
 }
 
-func main() {
-	defer timer("main")()
-
-	//console.Menu()
-
-	//cipherRSA := new(ciphers.RSA)
+func RSA() {
+	cipherRSA := new(ciphers.RSA)
 
 	//cipherRSA.GenerateKey(512)
 	//cipherRSA.SaveKeys()
 
-	//cipherRSA.LoadKeys(
-	//	"ciphers/RSA/PublicKey_210447.json",
-	//	"ciphers/RSA/PrivateKey_210447.json",
-	//)
+	cipherRSA.LoadKeys(
+		"ciphers/RSA/PublicKey_191215.json",
+		"ciphers/RSA/PrivateKey_191215.json",
+	)
 
 	message := "Если вы найдете человека с которым сможете себя вести также свободно, " +
 		"как ведете себя наедине с собой, то цените его как воздух."
 
 	messageBytes := []byte(message)
-	fmt.Println(hex.EncodeToString(messageBytes))
 
-	//fmt.Println(messageBytes)
+	cipherMessage := cipherRSA.Encrypt(messageBytes)
 
-	bl := ciphers.ToBlocks(messageBytes, 128)
+	fmt.Println("Зашифрованное сообщение:")
+	fmt.Println(hex.EncodeToString(cipherMessage))
+	fmt.Println("---")
 
-	for _, i := range bl {
-		fmt.Println(hex.EncodeToString(i.Bytes()))
-		//fmt.Println(i.Bytes())
-	}
+	fmt.Println("Расшифрованное сообщение:")
+	result := cipherRSA.Decrypt(cipherMessage)
 
-	fmt.Println(string(ciphers.ToBytes(bl)))
+	fmt.Println(string(result))
+}
 
-	//cipherMessage := cipherRSA.Encrypt(messageBytes)
-	//
-	//fmt.Println("Зашифрованное сообщение:")
-	//fmt.Println(hex.EncodeToString(cipherMessage))
-	//fmt.Println("---")
-	//
-	//fmt.Println("Расшифрованное сообщение:")
-	//result := cipherRSA.Decrypt(cipherMessage)
-	//
-	//fmt.Println(string(result))
+func main() {
+	defer timer("main")()
+
+	//console.Menu()
 
 }

@@ -7,6 +7,8 @@ import (
 // Пакет для разбития набора байт на блоки
 
 // ToBlocks - Разбивает набор незашифрованных байт на блоки, дополняняя недостающие октеты, возвращает массив незашифрованных big.Int
+//
+// Примечание: blockSize - ожидаемый размер блока учетом падинга
 func ToBlocks(_byteArray []byte, blockSize int) []*big.Int {
 
 	// Размер массива байт
@@ -17,7 +19,7 @@ func ToBlocks(_byteArray []byte, blockSize int) []*big.Int {
 	copy(byteArray, _byteArray)
 
 	// Количество цельных блоков
-	blockCount := byteArraySize / blockSize
+	blockCount := byteArraySize / (blockSize - 1)
 
 	result := []*big.Int{}
 	tempBytes := []byte{}
@@ -26,10 +28,16 @@ func ToBlocks(_byteArray []byte, blockSize int) []*big.Int {
 	for i := 0; i < blockCount; i++ {
 
 		// Срез байтов
-		tempBytes = byteArray[i*blockSize : (i+1)*blockSize]
+		tempBytes = byteArray[i*(blockSize-1) : (i+1)*(blockSize-1)]
+
+		paddingBytes := make([]byte, len(tempBytes))
+		copy(paddingBytes, tempBytes)
+
+		// Добавляем единичный падинг
+		paddingBytes = append(paddingBytes, byte(1))
 
 		// Добавляем в массив число
-		result = append(result, new(big.Int).SetBytes(tempBytes))
+		result = append(result, new(big.Int).SetBytes(paddingBytes))
 	}
 
 	// Последний блок
@@ -37,7 +45,7 @@ func ToBlocks(_byteArray []byte, blockSize int) []*big.Int {
 
 	// Количество имеющихся октетов
 
-	lastBlockBytes = byteArray[blockCount*blockSize:]
+	lastBlockBytes = byteArray[blockCount*(blockSize-1):]
 	octetsCount := len(lastBlockBytes)
 
 	if octetsCount != 0 {
@@ -51,20 +59,9 @@ func ToBlocks(_byteArray []byte, blockSize int) []*big.Int {
 			lastBlockBytes = append(lastBlockBytes, valueByte)
 		}
 
-	} else {
-		// Случай кратного блока
-
-		value := blockSize % 256
-		valueByte := byte(value) // Значение дополняемых октетов
-
-		// Дополняем недостающие октеты
-		for i := 0; i < blockSize; i++ {
-			lastBlockBytes = append(lastBlockBytes, valueByte)
-		}
+		// Добовляем последний блок в массив
+		result = append(result, new(big.Int).SetBytes(lastBlockBytes))
 	}
-
-	// Добаляем последний блок в массив
-	result = append(result, new(big.Int).SetBytes(lastBlockBytes))
 
 	return result
 }
@@ -107,17 +104,16 @@ func ToBytes(blocksArray []*big.Int) []byte {
 	for i := 0; i < len(blocksArray); i++ {
 
 		temp := blocksArray[i].Bytes()
+
+		// Убираем падинг
+
+		lastByte := temp[len(temp)-1]
+		lastByteValue := int(lastByte)
+
+		temp = temp[:len(temp)-lastByteValue]
+
 		byteArray = append(byteArray, temp...)
-	}
 
-	// Убираем падинг
-
-	// Получаем последний байт
-	lastByte := byteArray[len(byteArray)-1]
-	lastByteValue := int(lastByte)
-
-	if lastByteValue < len(byteArray) {
-		byteArray = byteArray[:len(byteArray)-lastByteValue]
 	}
 
 	return byteArray

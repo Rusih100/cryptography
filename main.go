@@ -2,7 +2,7 @@ package main
 
 import (
 	"cryptography/ciphers"
-	"cryptography/console"
+	"encoding/hex"
 	"fmt"
 	"time"
 )
@@ -18,7 +18,7 @@ func timer(name string) func() {
 func main() {
 	defer timer("main")()
 
-	console.Menu()
+	//console.Menu()
 
 	//cipherRSA := new(ciphers.RSA)
 
@@ -34,15 +34,15 @@ func main() {
 		"как ведете себя наедине с собой, то цените его как воздух."
 
 	messageBytes := []byte(message)
-	fmt.Println(len(messageBytes))
+	fmt.Println(hex.EncodeToString(messageBytes))
 
 	//fmt.Println(messageBytes)
 
-	bl := ciphers.ToBlocks(messageBytes, 64)
+	bl := ciphers.ToBlocks(messageBytes, 128)
 
 	for _, i := range bl {
-		//fmt.Println(hex.EncodeToString(i.Bytes()))
-		fmt.Println(i.Bytes())
+		fmt.Println(hex.EncodeToString(i.Bytes()))
+		//fmt.Println(i.Bytes())
 	}
 
 	fmt.Println(string(ciphers.ToBytes(bl)))

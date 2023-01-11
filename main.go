@@ -48,4 +48,10 @@ func main() {
 
 	//console.Menu()
 
+	cipherRabin := new(ciphers.Rabin)
+
+	//cipherRabin.GenerateKey(512)
+	//cipherRabin.SaveKeys()
+	cipherRabin.LoadKeys("ciphers/Rabin/PublicKey_161015.json", "ciphers/Rabin/PrivateKey_161015.json")
+
 }

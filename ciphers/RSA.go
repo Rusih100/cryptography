@@ -12,43 +12,9 @@ import (
 // Не изменять в алгоритмах!
 var (
 	constNum1 = big.NewInt(1)
+	constNum3 = big.NewInt(3)
+	constNum4 = big.NewInt(4)
 )
-
-// Публичный ключ
-
-type PublicKeyRSA struct {
-	PublicExponent *big.Int
-	N              *big.Int
-}
-
-func NewPublicKeyRSA(e *big.Int, n *big.Int) *PublicKeyRSA {
-
-	key := PublicKeyRSA{
-		PublicExponent: e,
-		N:              n,
-	}
-
-	return &key
-}
-
-// Приватный ключ
-
-type PrivateKeyRSA struct {
-	PrivateExponent *big.Int
-	Prime1          *big.Int
-	Prime2          *big.Int
-}
-
-func NewPrivateKeyRSA(d *big.Int, p *big.Int, q *big.Int) *PrivateKeyRSA {
-
-	key := PrivateKeyRSA{
-		PrivateExponent: d,
-		Prime1:          p,
-		Prime2:          q,
-	}
-
-	return &key
-}
 
 // RSA
 

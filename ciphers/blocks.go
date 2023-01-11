@@ -1,6 +1,7 @@
 package ciphers
 
 import (
+	"fmt"
 	"math/big"
 )
 
@@ -96,7 +97,7 @@ func ToCipherBlocks(_byteArray []byte, blockSize int) []*big.Int {
 }
 
 // ToBytes - Преобразует массив незашифрованных big.Int в массив незашифрованных байт
-func ToBytes(blocksArray []*big.Int) []byte {
+func ToBytes(blocksArray []*big.Int) ([]byte, error) {
 
 	byteArray := []byte{}
 
@@ -110,16 +111,24 @@ func ToBytes(blocksArray []*big.Int) []byte {
 		lastByte := temp[len(temp)-1]
 		lastByteValue := int(lastByte)
 
-		temp = temp[:len(temp)-lastByteValue]
+		for k := 0; k < lastByteValue; k++ {
+			if int(temp[len(temp)-1]) == lastByteValue {
+				// Удаляем последний элемент
+				temp = append(temp[:len(temp)-1], temp[len(temp):]...)
+
+			} else {
+				return nil, fmt.Errorf("error when removing padding")
+			}
+		}
 
 		byteArray = append(byteArray, temp...)
 
 	}
 
-	return byteArray
+	return byteArray, nil
 }
 
-// ToCipherBytes - Преобразует массив незашифрованных big.Int в массив незашифрованных байт
+// ToCipherBytes - Преобразует массив зашифрованных big.Int в массив зашифрованных байт
 func ToCipherBytes(blocksArray []*big.Int, blockSize int) []byte {
 
 	byteArray := []byte{}

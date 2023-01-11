@@ -119,3 +119,169 @@ func (rab *Rabin) LoadKeys(publicKeyPath string, privateKeyPath string) *Rabin {
 
 	return rab
 }
+
+// Encrypt - Шифрует последовательность байт
+func (rab *Rabin) Encrypt(message []byte) []byte {
+
+	if rab.publicKey == nil {
+		panic("No public key specified")
+	}
+
+	// Загружаем ключ
+	n := new(big.Int)
+	n.Set(rab.publicKey.N)
+
+	// Размер блока для шифррования
+	blockSize := len(n.Bytes()) - 1
+
+	// Бьем сообщение на блоки
+	messageBlocks := ToBlocks(message, blockSize)
+
+	cipherBlocks := []*big.Int{}
+	temp := new(big.Int)
+
+	// Шифруем
+	for i := 0; i < len(messageBlocks); i++ {
+		temp.Set(messageBlocks[i])
+
+		temp = crypto_math.PowMod(temp, constNum2, n)
+		cipherBlocks = append(cipherBlocks, new(big.Int).Set(temp))
+	}
+
+	// Переводим блоки в байты
+	result := ToCipherBytes(cipherBlocks, blockSize+1)
+
+	return result
+}
+
+// Decrypt - Расшифровывает последовательность байт
+func (rab *Rabin) Decrypt(ciphertext []byte) []byte {
+
+	if rab.privateKey == nil {
+		panic("No private key specified")
+	}
+
+	p := new(big.Int)
+	q := new(big.Int)
+	yp := new(big.Int)
+	yq := new(big.Int)
+	gcd := new(big.Int)
+
+	p = rab.privateKey.Prime1
+	q = rab.privateKey.Prime2
+
+	// Загружаем ключ
+	n := new(big.Int).Mul(p, q)
+
+	gcd, yp, yq = crypto_math.AdvancedEuclidAlgorithm(p, q)
+
+	if gcd.Cmp(constNum1) != 0 {
+		panic("p and q are not mutually simple")
+	}
+
+	// Размер блока для шифррования
+	blockSize := len(n.Bytes())
+
+	// Бьем сообщение на блоки
+	cipherBlocks := ToCipherBlocks(ciphertext, blockSize)
+
+	messageBlocks1 := []*big.Int{}
+	messageBlocks2 := []*big.Int{}
+	messageBlocks3 := []*big.Int{}
+	messageBlocks4 := []*big.Int{}
+
+	temp := new(big.Int)
+
+	m1 := new(big.Int)
+	m2 := new(big.Int)
+	m3 := new(big.Int)
+	m4 := new(big.Int)
+	mp := new(big.Int)
+	mq := new(big.Int)
+
+	// Расшифровываем
+	for i := 0; i < len(cipherBlocks); i++ {
+		temp.Set(cipherBlocks[i])
+
+		mp, _ = crypto_math.ModuloComparisonSecond(temp, p)
+		mq, _ = crypto_math.ModuloComparisonSecond(temp, q)
+
+		left := new(big.Int)
+		right := new(big.Int)
+
+		left = left.Mul(yp, p)
+		left = left.Mod(left, n)
+		left = left.Mul(left, mq)
+		left = left.Mod(left, n)
+
+		right = right.Mul(yq, q)
+		right = right.Mod(right, n)
+		right = right.Mul(right, mp)
+		right = right.Mod(right, n)
+
+		// m1
+		m1 = m1.Add(left, right)
+		m1 = m1.Mod(m1, n)
+
+		// m2
+		m2 = m2.Sub(n, m1)
+
+		// m3
+		m3 = m3.Sub(left, right)
+		m3 = m3.Mod(m3, n)
+
+		// m4
+		m4 = m4.Sub(n, m3)
+
+		messageBlocks1 = append(messageBlocks1, new(big.Int).Set(m1))
+		messageBlocks2 = append(messageBlocks2, new(big.Int).Set(m2))
+		messageBlocks3 = append(messageBlocks3, new(big.Int).Set(m3))
+		messageBlocks4 = append(messageBlocks4, new(big.Int).Set(m4))
+	}
+
+	result := []byte{}
+
+	it := len(messageBlocks1)
+
+	// Собираем 4 массива блоков в 1 сообщение
+	for b := 0; b < it; b++ {
+
+		arr := messageBlocks1[b : b+1]
+
+		msg, err := ToBytes(arr)
+
+		if err == nil {
+			result = append(result, msg...)
+			continue
+		}
+
+		arr = messageBlocks2[b : b+1]
+
+		msg, err = ToBytes(arr)
+
+		if err == nil {
+			result = append(result, msg...)
+			continue
+		}
+
+		arr = messageBlocks3[b : b+1]
+
+		msg, err = ToBytes(arr)
+
+		if err == nil {
+			result = append(result, msg...)
+			continue
+		}
+
+		arr = messageBlocks4[b : b+1]
+
+		msg, err = ToBytes(arr)
+
+		if err == nil {
+			result = append(result, msg...)
+			continue
+		}
+	}
+
+	return result
+}

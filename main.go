@@ -43,15 +43,38 @@ func RSA() {
 	fmt.Println(string(result))
 }
 
-func main() {
-	defer timer("main")()
-
-	//console.Menu()
-
+func Rabin() {
 	cipherRabin := new(ciphers.Rabin)
 
 	//cipherRabin.GenerateKey(512)
 	//cipherRabin.SaveKeys()
-	cipherRabin.LoadKeys("ciphers/Rabin/PublicKey_161015.json", "ciphers/Rabin/PrivateKey_161015.json")
+	cipherRabin.LoadKeys(
+		"ciphers/Rabin/PublicKey_161015.json",
+		"ciphers/Rabin/PrivateKey_161015.json",
+	)
+
+	message := "Криптосистема Рабина!"
+
+	messageBytes := []byte(message)
+
+	cipherMessage := cipherRabin.Encrypt(messageBytes)
+
+	fmt.Println("Зашифрованное сообщение:")
+
+	fmt.Println(hex.EncodeToString(cipherMessage))
+
+	fmt.Println("---")
+	fmt.Println("Расшифрованные сообщения:")
+
+	res := cipherRabin.Decrypt(cipherMessage)
+	fmt.Println(string(res))
+
+}
+
+func main() {
+	defer timer("main")()
+
+	Rabin()
+	//console.Menu()
 
 }

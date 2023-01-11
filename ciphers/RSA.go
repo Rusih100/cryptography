@@ -12,6 +12,7 @@ import (
 // Не изменять в алгоритмах!
 var (
 	constNum1 = big.NewInt(1)
+	constNum2 = big.NewInt(2)
 	constNum3 = big.NewInt(3)
 	constNum4 = big.NewInt(4)
 )
@@ -216,7 +217,7 @@ func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
 	}
 
 	// Переводим блоки в байты
-	result := ToBytes(messageBlocks)
+	result, _ := ToBytes(messageBlocks)
 
 	return result
 }

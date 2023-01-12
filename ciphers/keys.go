@@ -73,3 +73,39 @@ func NewPrivateKeyRabin(p *big.Int, q *big.Int) *PrivateKeyRabin {
 
 	return &key
 }
+
+// Шифр Эль-Гамаля
+
+// Публичный ключ
+
+type PublicKeyElGamal struct {
+	p     *big.Int
+	alpha *big.Int
+	beta  *big.Int
+}
+
+func NewPublicKeyElGamal(p *big.Int, alpha *big.Int, beta *big.Int) *PublicKeyElGamal {
+
+	key := PublicKeyElGamal{
+		p:     p,
+		alpha: alpha,
+		beta:  beta,
+	}
+
+	return &key
+}
+
+// Приватный ключ
+
+type PrivateKeyElGamal struct {
+	a *big.Int
+}
+
+func NewPrivateKeyElGamal(a *big.Int) *PrivateKeyElGamal {
+
+	key := PrivateKeyElGamal{
+		a: a,
+	}
+
+	return &key
+}

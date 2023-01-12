@@ -74,7 +74,6 @@ func Rabin() {
 func main() {
 	defer timer("main")()
 
-	Rabin()
 	//console.Menu()
 
 }

@@ -2,3 +2,4 @@
 finite_field/cayley_table/*
 ciphers/RSA/*
 ciphers/Rabin/*
+ciphers/ElGamal/*

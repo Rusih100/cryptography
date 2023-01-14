@@ -71,10 +71,7 @@ func Rabin() {
 
 }
 
-func main() {
-	defer timer("main")()
-
-	//console.Menu()
+func ElGamal() {
 
 	cipherElGamal := new(ciphers.ElGamal)
 
@@ -103,5 +100,15 @@ func main() {
 	result := cipherElGamal.Decrypt(cipherMessage1, cipherMessage2)
 
 	fmt.Println(string(result))
+
+}
+
+func main() {
+	defer timer("main")()
+
+	//console.Menu()
+
+	Rabin()
+	//ElGamal()
 
 }

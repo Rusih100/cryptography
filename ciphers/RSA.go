@@ -199,7 +199,7 @@ func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
 	d := new(big.Int)
 	d.Set(rsa.privateKey.PrivateExponent)
 
-	// Размер блока для шифррования
+	// Размер блока для расшифррования
 	blockSize := len(n.Bytes())
 
 	// Бьем сообщение на блоки

@@ -179,7 +179,7 @@ func (rab *Rabin) Decrypt(ciphertext []byte) []byte {
 		panic("p and q are not mutually simple")
 	}
 
-	// Размер блока для шифррования
+	// Размер блока для расшифррования
 	blockSize := len(n.Bytes())
 
 	// Бьем сообщение на блоки

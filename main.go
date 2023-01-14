@@ -76,4 +76,32 @@ func main() {
 
 	//console.Menu()
 
+	cipherElGamal := new(ciphers.ElGamal)
+
+	//cipherElGamal.GenerateKey(512)
+	//cipherElGamal.SaveKeys()
+
+	cipherElGamal.LoadKeys(
+		"ciphers/ElGamal/PublicKey_205240.json",
+		"ciphers/ElGamal/PrivateKey_205240.json",
+	)
+
+	message := "Слова лишь мешают понимать друг друга"
+
+	messageBytes := []byte(message)
+
+	cipherMessage1, cipherMessage2 := cipherElGamal.Encrypt(messageBytes)
+
+	fmt.Println("Зашифрованные сообщения:")
+	fmt.Println("1.")
+	fmt.Println(hex.EncodeToString(cipherMessage1))
+	fmt.Println("2.")
+	fmt.Println(hex.EncodeToString(cipherMessage2))
+	fmt.Println("---")
+
+	fmt.Println("Расшифрованное сообщение:")
+	result := cipherElGamal.Decrypt(cipherMessage1, cipherMessage2)
+
+	fmt.Println(string(result))
+
 }

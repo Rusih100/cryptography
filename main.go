@@ -2,6 +2,7 @@ package main
 
 import (
 	"cryptography/ciphers"
+	"cryptography/console"
 	"encoding/hex"
 	"fmt"
 	"time"
@@ -106,9 +107,5 @@ func ElGamal() {
 func main() {
 	defer timer("main")()
 
-	//console.Menu()
-
-	Rabin()
-	//ElGamal()
-
+	console.Menu()
 }

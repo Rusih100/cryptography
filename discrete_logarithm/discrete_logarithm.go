@@ -175,7 +175,10 @@ func DiscreteLogarithm(_a *big.Int, _b *big.Int, _p *big.Int) *big.Int {
 		d, logD = fx(d, logD)
 		d, logD = fx(d, logD)
 
-		if c.Cmp(d) == 0 {
+		condition1 := new(big.Int).Mod(c, p)
+		condition2 := new(big.Int).Mod(d, p)
+
+		if condition1.Cmp(condition2) == 0 {
 			break
 		}
 	}

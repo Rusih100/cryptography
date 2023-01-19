@@ -2,7 +2,7 @@ package finite_field
 
 import (
 	"cryptography/crypto_math"
-	"cryptography/polynomial"
+	"github.com/Rusih100/polynomial"
 	"math/big"
 	"os"
 )

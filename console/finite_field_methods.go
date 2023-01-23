@@ -2,8 +2,8 @@ package console
 
 import (
 	"cryptography/finite_field"
-	"cryptography/polynomial"
 	"fmt"
+	"github.com/Rusih100/polynomial"
 	"math/big"
 )
 

@@ -3,8 +3,8 @@ package console
 import (
 	"crypto/rand"
 	"cryptography/factorization"
-	"cryptography/polynomial"
 	"fmt"
+	"github.com/Rusih100/polynomial"
 	"math/big"
 )
 

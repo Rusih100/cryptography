@@ -3,8 +3,8 @@ package factorization
 import (
 	"crypto/rand"
 	"cryptography/crypto_math"
-	"cryptography/polynomial"
 	bigFloat "github.com/ALTree/bigfloat"
+	"github.com/Rusih100/polynomial"
 	"math"
 	"math/big"
 	rnd "math/rand"

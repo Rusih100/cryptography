@@ -7,6 +7,8 @@ import (
 	"math/big"
 )
 
+var path = "D:\\GoLand-project\\cryptography\\finite_field\\cayley_table"
+
 func GaloisFieldMenu() {
 
 	runFlag := true
@@ -63,11 +65,11 @@ func BaseGaloisFieldConsole() {
 	fmt.Println()
 
 	GF := finite_field.NewBaseGaloisField(p)
-	GF.CayleyTableAdd()
-	GF.CayleyTableMul()
+	GF.CayleyTableAdd(path)
+	GF.CayleyTableMul(path)
 
-	fmt.Println("Поле" + GF.String() + "построено")
-	fmt.Print("Сохранено в finite_field/cayley_table" + "\n\n")
+	fmt.Println("Поле " + GF.String() + "построено")
+	fmt.Print("Сохранено в " + path + "\n\n")
 }
 
 func GaloisFieldConsole() {
@@ -110,9 +112,9 @@ func GaloisFieldConsole() {
 	fmt.Println()
 
 	GF := finite_field.NewGaloisField(p, n, poly)
-	GF.CayleyTableAdd()
-	GF.CayleyTableMul()
+	GF.CayleyTableAdd(path)
+	GF.CayleyTableMul(path)
 
-	fmt.Println("Поле" + GF.String() + "построено")
-	fmt.Print("Сохранено в finite_field/cayley_table" + "\n\n")
+	fmt.Println("Поле " + GF.String() + "построено")
+	fmt.Print("Сохранено в " + path + "\n\n")
 }

@@ -136,8 +136,8 @@ func (g *GaloisField) String() string {
 
 // CayleyTableAdd - Таблица Кэли для сложения
 //
-// Файл сохраняется в finite_field/cayley_table
-func (g *GaloisField) CayleyTableAdd() {
+// Файл сохраняется по абсолютному пути
+func (g *GaloisField) CayleyTableAdd(path string) {
 
 	// Максимальное количество элементов
 	maxValue := new(big.Int)
@@ -146,7 +146,7 @@ func (g *GaloisField) CayleyTableAdd() {
 	name := g.p.String() + "^" + g.n.String() + "_add"
 
 	// Создание файла
-	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	file, err := os.Create(path + "/" + name + ".csv")
 	if err != nil {
 		panic(err)
 	}
@@ -266,8 +266,8 @@ func (g *GaloisField) CayleyTableAdd() {
 
 // CayleyTableMul - Таблица Кэли для умножения
 //
-// Файл сохраняется в finite_field/cayley_table
-func (g *GaloisField) CayleyTableMul() {
+// Файл сохраняется по абсолютному пути
+func (g *GaloisField) CayleyTableMul(path string) {
 
 	// Максимальное количество элементов
 	maxValue := new(big.Int)
@@ -276,7 +276,7 @@ func (g *GaloisField) CayleyTableMul() {
 	name := g.p.String() + "^" + g.n.String() + "_mul"
 
 	// Создание файла
-	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	file, err := os.Create(path + "/" + name + ".csv")
 	if err != nil {
 		panic(err)
 	}

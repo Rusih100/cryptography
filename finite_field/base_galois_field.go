@@ -82,13 +82,13 @@ func (f *BaseGaloisField) String() string {
 
 // CayleyTableAdd - Таблица Кэли для сложения
 //
-// Файл сохраняется в finite_field/cayley_table
-func (f *BaseGaloisField) CayleyTableAdd() {
+// Файл сохраняется по абсолютному пути
+func (f *BaseGaloisField) CayleyTableAdd(path string) {
 
 	name := f.p.String() + "_add"
 
 	// Создание файла
-	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	file, err := os.Create(path + "/" + name + ".csv")
 	if err != nil {
 		panic(err)
 	}
@@ -137,13 +137,13 @@ func (f *BaseGaloisField) CayleyTableAdd() {
 
 // CayleyTableMul - Таблица Кэли для умножения
 //
-// Файл сохраняется в finite_field/cayley_table
-func (f *BaseGaloisField) CayleyTableMul() {
+// Файл сохраняется по абсолютному пути
+func (f *BaseGaloisField) CayleyTableMul(path string) {
 
 	name := f.p.String() + "_mul"
 
 	// Создание файла
-	file, err := os.Create("finite_field/cayley_table/" + name + ".csv")
+	file, err := os.Create(path + "/" + name + ".csv")
 	if err != nil {
 		panic(err)
 	}

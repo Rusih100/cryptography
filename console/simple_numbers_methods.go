@@ -1,8 +1,8 @@
 package console
 
 import (
-	"cryptography/crypto_math"
 	"fmt"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"math/big"
 )
 
@@ -69,7 +69,7 @@ func FermatTestConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println()
-		if crypto_math.FermatTest(n) {
+		if cryptoMath.FermatTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
@@ -115,7 +115,7 @@ func SolovayStrassenTestConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println()
-		if crypto_math.SolovayStrassenTest(n) {
+		if cryptoMath.SolovayStrassenTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")
@@ -161,7 +161,7 @@ func MillerRabinTestConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println()
-		if crypto_math.MillerRabinTest(n) {
+		if cryptoMath.MillerRabinTest(n) {
 			fmt.Println("Число n, вероятно, простое")
 		} else {
 			fmt.Println("Число n составное")

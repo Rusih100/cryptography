@@ -2,8 +2,8 @@ package console
 
 import (
 	"crypto/rand"
-	"cryptography/factorization"
 	"fmt"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"github.com/Rusih100/polynomial"
 	"math/big"
 )
@@ -94,7 +94,7 @@ func RoPollardFactorConsole() {
 			c = c.Add(c, big.NewInt(1))
 			//
 
-			factor = factorization.RoPollardFactor(n, c, poly)
+			factor = cryptoMath.RoPollardFactor(n, c, poly)
 		}
 
 		fmt.Println("Результат:")
@@ -146,7 +146,7 @@ func RoOnePollardFactorConsole() {
 		factor := new(big.Int)
 
 		for i := 0; i < 100 && factor != nil; i++ {
-			factor = factorization.RoOnePollardFactor(n)
+			factor = cryptoMath.RoOnePollardFactor(n)
 		}
 
 		fmt.Println("Результат:")
@@ -196,7 +196,7 @@ func FactorizationConsole() {
 		n.SetString(nString, 10)
 
 		factors := []*big.Int{}
-		factors = factorization.Factorization(n)
+		factors = cryptoMath.Factorization(n)
 
 		fmt.Println("Результат:")
 		fmt.Print("[\n")

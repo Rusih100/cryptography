@@ -1,8 +1,8 @@
 package console
 
 import (
-	"cryptography/crypto_math"
 	"fmt"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"math/big"
 )
 
@@ -86,7 +86,7 @@ func ModuloComparisonFirstConsole() {
 		x1 := new(big.Int)
 		offset := new(big.Int)
 
-		countSolutions, x1, offset = crypto_math.ModuloComparisonFirst(a, b, mod)
+		countSolutions, x1, offset = cryptoMath.ModuloComparisonFirst(a, b, mod)
 
 		fmt.Println("\nРезультат:")
 
@@ -175,7 +175,7 @@ func ModuloComparisonSecondConsole() {
 		x1 := new(big.Int)
 		x2 := new(big.Int)
 
-		x1, x2 = crypto_math.ModuloComparisonSecond(a, p)
+		x1, x2 = cryptoMath.ModuloComparisonSecond(a, p)
 
 		fmt.Println("\nРезультат:")
 
@@ -252,7 +252,7 @@ func ModuloComparisonSystemConsole() {
 		}
 		fmt.Print("]\n")
 
-		x = crypto_math.ModuloComparisonSystem(bArray, mArray)
+		x = cryptoMath.ModuloComparisonSystem(bArray, mArray)
 
 		fmt.Println("\nРезультат:")
 

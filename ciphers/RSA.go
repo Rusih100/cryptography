@@ -1,8 +1,8 @@
 package ciphers
 
 import (
-	"cryptography/crypto_math"
 	"encoding/json"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"math/big"
 	"os"
 	"time"
@@ -44,12 +44,12 @@ func (rsa *RSA) GenerateKey(k int) *RSA {
 
 	// Генерация
 
-	p = crypto_math.SimpleNumber(k, iter)
-	q = crypto_math.SimpleNumber(k, iter)
+	p = cryptoMath.SimpleNumber(k, iter)
+	q = cryptoMath.SimpleNumber(k, iter)
 
 	// Если p и q равны генерируем новое q
 	for p.Cmp(q) == 0 {
-		q = crypto_math.SimpleNumber(k, iter)
+		q = cryptoMath.SimpleNumber(k, iter)
 	}
 
 	n = n.Mul(p, q)
@@ -61,13 +61,13 @@ func (rsa *RSA) GenerateKey(k int) *RSA {
 	// Выбираем e
 
 	// Выбираем открытую экспоненту
-	e = crypto_math.SimpleNumber(k/8, iter)
+	e = cryptoMath.SimpleNumber(k/8, iter)
 
 	for {
-		d = crypto_math.InverseElement(e, phi)
+		d = cryptoMath.InverseElement(e, phi)
 
 		gcd := new(big.Int)
-		gcd = crypto_math.EuclidAlgorithm(e, phi)
+		gcd = cryptoMath.EuclidAlgorithm(e, phi)
 
 		if gcd.Cmp(constNum1) == 0 && new(big.Int).Mod(new(big.Int).Mul(e, d), phi).Cmp(constNum1) == 0 {
 			break
@@ -173,7 +173,7 @@ func (rsa *RSA) Encrypt(message []byte) []byte {
 	for i := 0; i < len(messageBlocks); i++ {
 		temp.Set(messageBlocks[i])
 
-		temp = crypto_math.PowMod(temp, e, n)
+		temp = cryptoMath.PowMod(temp, e, n)
 		cipherBlocks = append(cipherBlocks, new(big.Int).Set(temp))
 	}
 
@@ -212,7 +212,7 @@ func (rsa *RSA) Decrypt(ciphertext []byte) []byte {
 	for i := 0; i < len(cipherBlocks); i++ {
 		temp.Set(cipherBlocks[i])
 
-		temp = crypto_math.PowMod(temp, d, n)
+		temp = cryptoMath.PowMod(temp, d, n)
 		messageBlocks = append(messageBlocks, new(big.Int).Set(temp))
 	}
 

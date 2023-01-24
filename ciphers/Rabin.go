@@ -1,8 +1,8 @@
 package ciphers
 
 import (
-	"cryptography/crypto_math"
 	"encoding/json"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"math/big"
 	"os"
 	"time"
@@ -31,7 +31,7 @@ func (rab *Rabin) GenerateKey(k int) *Rabin {
 
 	// Генерация p с проверкой
 	for {
-		p = crypto_math.SimpleNumber(k, iter)
+		p = cryptoMath.SimpleNumber(k, iter)
 
 		if new(big.Int).Mod(new(big.Int).Sub(p, constNum3), constNum4).Sign() == 0 {
 			break
@@ -40,7 +40,7 @@ func (rab *Rabin) GenerateKey(k int) *Rabin {
 
 	// Генерация q с проверкой
 	for {
-		q = crypto_math.SimpleNumber(k, iter)
+		q = cryptoMath.SimpleNumber(k, iter)
 
 		if new(big.Int).Mod(new(big.Int).Sub(q, constNum3), constNum4).Sign() == 0 && p.Cmp(q) != 0 {
 			break
@@ -144,7 +144,7 @@ func (rab *Rabin) Encrypt(message []byte) []byte {
 	for i := 0; i < len(messageBlocks); i++ {
 		temp.Set(messageBlocks[i])
 
-		temp = crypto_math.PowMod(temp, constNum2, n)
+		temp = cryptoMath.PowMod(temp, constNum2, n)
 		cipherBlocks = append(cipherBlocks, new(big.Int).Set(temp))
 	}
 
@@ -173,7 +173,7 @@ func (rab *Rabin) Decrypt(ciphertext []byte) []byte {
 	// Загружаем ключ
 	n := new(big.Int).Mul(p, q)
 
-	gcd, yp, yq = crypto_math.AdvancedEuclidAlgorithm(p, q)
+	gcd, yp, yq = cryptoMath.AdvancedEuclidAlgorithm(p, q)
 
 	if gcd.Cmp(constNum1) != 0 {
 		panic("p and q are not mutually simple")
@@ -203,8 +203,8 @@ func (rab *Rabin) Decrypt(ciphertext []byte) []byte {
 	for i := 0; i < len(cipherBlocks); i++ {
 		temp.Set(cipherBlocks[i])
 
-		mp, _ = crypto_math.ModuloComparisonSecond(temp, p)
-		mq, _ = crypto_math.ModuloComparisonSecond(temp, q)
+		mp, _ = cryptoMath.ModuloComparisonSecond(temp, p)
+		mq, _ = cryptoMath.ModuloComparisonSecond(temp, q)
 
 		left := new(big.Int)
 		right := new(big.Int)

@@ -1,8 +1,8 @@
 package console
 
 import (
-	"cryptography/finite_field"
 	"fmt"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"github.com/Rusih100/polynomial"
 	"math/big"
 )
@@ -64,7 +64,7 @@ func BaseGaloisFieldConsole() {
 
 	fmt.Println()
 
-	GF := finite_field.NewBaseGaloisField(p)
+	GF := cryptoMath.NewBaseGaloisField(p)
 	GF.CayleyTableAdd(path)
 	GF.CayleyTableMul(path)
 
@@ -111,7 +111,7 @@ func GaloisFieldConsole() {
 
 	fmt.Println()
 
-	GF := finite_field.NewGaloisField(p, n, poly)
+	GF := cryptoMath.NewGaloisField(p, n, poly)
 	GF.CayleyTableAdd(path)
 	GF.CayleyTableMul(path)
 

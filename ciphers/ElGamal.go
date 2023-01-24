@@ -2,8 +2,8 @@ package ciphers
 
 import (
 	"crypto/rand"
-	"cryptography/crypto_math"
 	"encoding/json"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"math/big"
 	"os"
 	"time"
@@ -34,7 +34,7 @@ func (elg *ElGamal) GenerateKey(k int) *ElGamal {
 
 	// Генерация
 
-	p = crypto_math.SimpleNumber(k, iter)
+	p = cryptoMath.SimpleNumber(k, iter)
 
 	// Генерируем случайное число а
 
@@ -61,10 +61,10 @@ func (elg *ElGamal) GenerateKey(k int) *ElGamal {
 		}
 		alpha = alpha.Add(alpha, constNum3)
 
-		conditionOne := crypto_math.PowMod(alpha, p2, p)
+		conditionOne := cryptoMath.PowMod(alpha, p2, p)
 		if conditionOne.Cmp(constNum1) != 0 {
 
-			conditionTwo := crypto_math.PowMod(
+			conditionTwo := cryptoMath.PowMod(
 				alpha,
 				new(big.Int).Div(new(big.Int).Sub(p, constNum1), p2),
 				p,
@@ -77,7 +77,7 @@ func (elg *ElGamal) GenerateKey(k int) *ElGamal {
 	}
 
 	// Вычисляем бета
-	beta = crypto_math.PowMod(alpha, a, p)
+	beta = cryptoMath.PowMod(alpha, a, p)
 
 	// Устанавливаем ключи
 
@@ -197,11 +197,11 @@ func (elg *ElGamal) Encrypt(message []byte) ([]byte, []byte) {
 		//
 
 		// Первое сообщение
-		cipher1 = crypto_math.PowMod(alpha, r, p)
+		cipher1 = cryptoMath.PowMod(alpha, r, p)
 		cipherBlocks1 = append(cipherBlocks1, new(big.Int).Set(cipher1))
 
 		// Второе сообщение
-		cipher2 = crypto_math.PowMod(beta, r, p)
+		cipher2 = cryptoMath.PowMod(beta, r, p)
 		cipher2 = cipher2.Mul(cipher2, temp)
 		cipher2 = cipher2.Mod(cipher2, p)
 		cipherBlocks2 = append(cipherBlocks2, new(big.Int).Set(cipher2))
@@ -245,8 +245,8 @@ func (elg *ElGamal) Decrypt(ciphertext1 []byte, ciphertext2 []byte) []byte {
 		cipher1.Set(cipherBlocks1[i])
 		cipher2.Set(cipherBlocks2[i])
 
-		temp = crypto_math.PowMod(cipher1, a, p)
-		temp = crypto_math.InverseElement(temp, p)
+		temp = cryptoMath.PowMod(cipher1, a, p)
+		temp = cryptoMath.InverseElement(temp, p)
 		temp = temp.Mul(temp, cipher2)
 		temp = temp.Mod(temp, p)
 

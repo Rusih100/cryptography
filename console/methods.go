@@ -1,9 +1,8 @@
 package console
 
 import (
-	"cryptography/crypto_math"
-	"cryptography/discrete_logarithm"
 	"fmt"
+	cryptoMath "github.com/Rusih100/crypto-math"
 	"math/big"
 )
 
@@ -34,7 +33,7 @@ func EuclidAlgorithmConsole() {
 		a := new(big.Int)
 		b := new(big.Int)
 
-		m, a, b = crypto_math.AdvancedEuclidAlgorithm(x, y)
+		m, a, b = cryptoMath.AdvancedEuclidAlgorithm(x, y)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println("m =", m)
@@ -88,7 +87,7 @@ func PowConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println("\nРезультат:")
-		fmt.Println(crypto_math.Pow(a, n))
+		fmt.Println(cryptoMath.Pow(a, n))
 
 		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
@@ -144,7 +143,7 @@ func PowModConsole() {
 		mod.SetString(modString, 10)
 
 		res := new(big.Int)
-		res = crypto_math.PowMod(a, n, mod)
+		res = cryptoMath.PowMod(a, n, mod)
 
 		fmt.Println("\nРезультат:")
 		fmt.Println(res)
@@ -196,7 +195,7 @@ func JacobiConsole() {
 		n.SetString(nString, 10)
 
 		fmt.Println("\nРезультат:")
-		fmt.Println(crypto_math.Jacobi(a, n))
+		fmt.Println(cryptoMath.Jacobi(a, n))
 
 		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
@@ -238,7 +237,7 @@ func GenerateSimpleNumberConsole() {
 		_, _ = fmt.Scan(&t)
 
 		fmt.Println("\nРезультат:")
-		fmt.Println(crypto_math.SimpleNumber(k, t))
+		fmt.Println(cryptoMath.SimpleNumber(k, t))
 
 		for switchFlag {
 			fmt.Print("\nr - повторить,\t b - назад\n")
@@ -295,7 +294,7 @@ func DiscreteLogarithmConsole() {
 		mod.SetString(modString, 10)
 
 		res := new(big.Int)
-		res = discrete_logarithm.DiscreteLogarithm(a, b, mod)
+		res = cryptoMath.DiscreteLogarithm(a, b, mod)
 
 		fmt.Println("\nРезультат:")
 		if res == nil {
